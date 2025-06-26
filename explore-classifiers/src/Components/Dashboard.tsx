@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import FilterSelect from './Common/FilterSelect';
 import TestingUmapPlot from './TestingUmapPlot';
 import TestingSunBurstPlot from './TestingSunBurstPlot';
@@ -26,6 +25,7 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
         <h1 style={{ marginBottom: '40px' }}>Methylation Classifier</h1>
         <FilterSelect onSearch={handleSearch} />
         <p style={{ marginTop: '40px', textAlign: 'center' }}>
+          {/* TODO: dynamic display the result summary */}
           {searchQuery === 'CNS'
             ? 'Showing results for Central Nervous System (CNS)'
             : 'This summary page shows results from all classifications.'}
@@ -33,10 +33,12 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
 
         <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
           <div style={{ width: '50%' }}>
+            {/* TODO: fetch from API to create and display the sunburst chart */}
             <p>Testing Sunbust Chart</p>
             {searchQuery === 'CNS' ? <TestingCNSSunburst /> : <TestingSunBurstPlot />}
           </div>
           <div style={{ width: '50%' }}>
+            {/* TODO: fetch from API to create and display the umap */}
             <p>Testing UMAP</p>
             {searchQuery === 'CNS' ? <TestingCNSUMAP /> : <TestingUmapPlot />}
           </div>

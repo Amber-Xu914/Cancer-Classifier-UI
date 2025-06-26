@@ -4,8 +4,9 @@ import { CustomTabs } from './Common/Tabs';
 import CustomButton from './Common/Button';
 import { NAVBAR_HEIGHT } from '../Constants/Common/Dimensions.constants';
 import { useDashboard } from '../Contexts/DashboardContexts';
+import { corePalette } from '../Themes/colours';
 
-const NavBarWrapper = styled(AppBar)(({ theme }) => ({
+const NavBarWrapper = styled(AppBar)(() => ({
   position: 'sticky',
   display: 'flex',
   flexDirection: 'row',
@@ -14,7 +15,7 @@ const NavBarWrapper = styled(AppBar)(({ theme }) => ({
   width: '100vw',
   height: NAVBAR_HEIGHT,
   boxShadow: 'none',
-  backgroundColor: theme.colours.core.grey30,
+  backgroundColor: corePalette.grey30,
   padding: '0 24px',
 }));
 

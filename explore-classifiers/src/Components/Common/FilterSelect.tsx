@@ -27,8 +27,9 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
   };
 
   const handleSearch = () => {
+    // TODO: handle filter and search bar content
     const value = filter === 'Cancer Type' ? comboValue : searchValue;
-    onSearch(filter, value); // on click
+    onSearch(filter, value);
   };
 
   // TODO: fetching the available cancer types from API
