@@ -1,54 +1,54 @@
 import Plot from 'react-plotly.js';
 import { useEffect, useState } from 'react';
+import { corePalette } from '../Themes/colours';
+
+const tumorTypes = [
+  { name: 'Medulloblastoma', color: corePalette.green300 },
+  { name: 'ATRT', color: corePalette.green200 },
+  { name: 'Ependymoma', color: corePalette.green150 },
+  { name: 'DIPG', color: corePalette.green100 },
+  { name: 'Ewing Sarcoma', color: corePalette.green50 }
+];
+
+// 创建随机 UMAP-like 数据（每类 20 个点围绕中心）
+const generateMockUMAP = () => {
+  const clusters = [];
+
+  const centers = [
+    [1, 1, 1],
+    [4, 1, 2],
+    [1, 4, 3],
+    [3, 4, 1],
+    [2, 2, 5]
+  ];
+
+  for (let i = 0; i < tumorTypes.length; i++) {
+    const [cx, cy, cz] = centers[i];
+    const cluster = {
+      x: Array.from({ length: 20 }, () => cx + (Math.random() - 0.5)),
+      y: Array.from({ length: 20 }, () => cy + (Math.random() - 0.5)),
+      z: Array.from({ length: 20 }, () => cz + (Math.random() - 0.5)),
+      name: tumorTypes[i].name,
+      mode: 'markers',
+      type: 'scatter3d',
+      marker: {
+        color: tumorTypes[i].color,
+        size: 6,
+        opacity: 0.8
+      }
+    };
+    clusters.push(cluster);
+  }
+
+  return clusters;
+};
 
 export default function TestingUmapPlot() {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('https://raw.githubusercontent.com/plotly/datasets/master/3d-scatter.csv')
-      .then((response) => response.text())
-      .then((csvText) => {
-        const rows = csvText.split('\n').slice(1).map((line) => {
-          const [x1, y1, z1, x2, y2, z2] = line.split(',').map(Number);
-          return { x1, y1, z1, x2, y2, z2 };
-        });
-
-        const trace1 = {
-          x: rows.map((r) => r.x1),
-          y: rows.map((r) => r.y1),
-          z: rows.map((r) => r.z1),
-          mode: 'markers',
-          marker: {
-            size: 12,
-            line: {
-              color: 'rgba(217, 217, 217, 0.14)',
-              width: 0.5
-            },
-            opacity: 0.8
-          },
-          type: 'scatter3d'
-        };
-
-        const trace2 = {
-          x: rows.map((r) => r.x2),
-          y: rows.map((r) => r.y2),
-          z: rows.map((r) => r.z2),
-          mode: 'markers',
-          marker: {
-            color: 'rgb(127, 127, 127)',
-            size: 12,
-            symbol: 'circle',
-            line: {
-              color: 'rgb(204, 204, 204)',
-              width: 1
-            },
-            opacity: 0.8
-          },
-          type: 'scatter3d'
-        };
-
-        setData([trace1, trace2]);
-      });
+    const syntheticData = generateMockUMAP();
+    setData(syntheticData);
   }, []);
 
   return (
@@ -60,6 +60,10 @@ export default function TestingUmapPlot() {
           xaxis: { title: 'UMAP 1' },
           yaxis: { title: 'UMAP 2' },
           zaxis: { title: 'UMAP 3' }
+        },
+        legend: {
+          x: 0,
+          y: 1
         },
         height: 500
       }}

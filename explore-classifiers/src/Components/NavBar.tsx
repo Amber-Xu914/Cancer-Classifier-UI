@@ -1,10 +1,12 @@
-import { AppBar, Box, Button, styled } from '@mui/material';
+import { AppBar, Box, styled } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { CustomTabs } from './Common/Tabs';
+import CustomButton from './Common/Button';
 import { NAVBAR_HEIGHT } from '../Constants/Common/Dimensions.constants';
-import zccTheme from '../Themes/zccTheme';
+import { useDashboard } from '../Contexts/DashboardContexts';
+import { corePalette } from '../Themes/colours';
 
-const NavBarWrapper = styled(AppBar)(({ theme }) => ({
+const NavBarWrapper = styled(AppBar)(() => ({
   position: 'sticky',
   display: 'flex',
   flexDirection: 'row',
@@ -13,11 +15,12 @@ const NavBarWrapper = styled(AppBar)(({ theme }) => ({
   width: '100vw',
   height: NAVBAR_HEIGHT,
   boxShadow: 'none',
-  backgroundColor: theme.colours.core.grey30,
+  backgroundColor: corePalette.grey30,
   padding: '0 24px',
 }));
 
 export default function NavBar() {
+  const { resetDashboard } = useDashboard();
   const location = useLocation();
 
   return (
@@ -50,25 +53,11 @@ export default function NavBar() {
         )}
       </Box>
 
-      <Box display="flex" alignItems="center" gap={2}>
-        <Button
-          sx={{
-            backgroundColor: zccTheme.colours.core.yellow100,
-            color: zccTheme.colours.core.offBlack200,
-            borderRadius: '50px',
-            padding: '6px 24px',
-            textTransform: 'none',
-            fontWeight: 'bold',
-            boxShadow: 'none',
-            '&:hover': {
-              backgroundColor: zccTheme.colours.core.yellow150,
-              boxShadow: 'none',
-            },
-          }}
-        >
-          Summary
-        </Button>
-      </Box>
+      <CustomButton
+        label="Summary"
+        variant="bold"
+        onClick={resetDashboard}
+      />
     </NavBarWrapper>
   );
 }
