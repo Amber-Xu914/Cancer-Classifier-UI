@@ -1,0 +1,32 @@
+.container {
+  display: flex;
+  height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  background-color: #f4f5f8;
+}
+
+.sidebar {
+  width: 140px;
+  min-width: 120px;
+  background-color: #ffffff;
+  padding: 20px 16px;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.03);
+}
+
+.sidebar h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.main {
+  flex: 1;
+  padding: 32px 48px;
+  overflow-y: auto;
+  background-color: #fafafa;
+}

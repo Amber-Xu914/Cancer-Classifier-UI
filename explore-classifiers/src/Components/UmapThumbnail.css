@@ -1,0 +1,51 @@
+.thumbnail {
+  position: relative;
+  border: 1px solid #e0e0e0;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  background-color: white;
+  transition: all 0.2s ease;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.thumbnail:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.thumbnail.selected {
+  border: 2px solid #3b82f6;
+  background-color: #e6f0ff;
+}
+
+.thumbnail-img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 10;
+}
+
+.thumbnail:hover .tooltip {
+  opacity: 1;
+}
