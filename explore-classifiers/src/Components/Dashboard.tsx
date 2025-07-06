@@ -4,6 +4,7 @@ import TestingSunBurstPlot from './TestingSunBurstPlot';
 import TestingCNSSunburst from './TestingCNSSunburst';
 import TestingCNSUMAP from './TestingCNSUmap';
 import { DashboardContext } from '../Contexts/DashboardContexts';
+import { useNavigate } from 'react-router-dom';
 
 interface DashboardProps {
   searchQuery: string;
@@ -11,8 +12,14 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProps) {
+  const navigate = useNavigate();
+
   const handleSearch = (filter: string, value: string | null) => {
-    if (filter === 'Cancer Type' && value?.toLowerCase().includes('cns')) {
+    if (!value) return;
+
+    if (filter === 'Patient') {
+      navigate('/PatientResults');
+    } else if (filter === 'Cancer Type' && value.toLowerCase().includes('cns')) {
       setSearchQuery('CNS');
     } else {
       setSearchQuery('default');
@@ -47,4 +54,3 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
     </DashboardContext.Provider>
   );
 }
-

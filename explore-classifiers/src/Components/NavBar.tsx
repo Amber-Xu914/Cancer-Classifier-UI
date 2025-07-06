@@ -1,5 +1,5 @@
 import { AppBar, Box, styled } from '@mui/material';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CustomTabs } from './Common/Tabs';
 import CustomButton from './Common/Button';
 import { NAVBAR_HEIGHT } from '../Constants/Common/Dimensions.constants';
@@ -22,6 +22,12 @@ const NavBarWrapper = styled(AppBar)(() => ({
 export default function NavBar() {
   const { resetDashboard } = useDashboard();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleSummaryClick = () => {
+    resetDashboard();
+    navigate('/dashboard');
+  };
 
   return (
     <NavBarWrapper>
@@ -37,26 +43,15 @@ export default function NavBar() {
             marginRight: '16px',
           }}
         />
-        <span style={{ color: 'black', fontWeight: 'bold' }}>Paediatric Cancer Classification</span>
-
-        {location.pathname.includes('dashboard') && (
-          <Box marginLeft="40px">
-            <CustomTabs
-              value={'home'}
-              onChange={() => {}}
-              variant="navigation"
-              size="large"
-              mode="dark"
-              tabs={[{ label: 'Home', value: 'home' }]}
-            />
-          </Box>
-        )}
+        <span style={{ color: 'black', fontWeight: 'bold' }}>
+          Paediatric Cancer Classification
+        </span>
       </Box>
 
       <CustomButton
         label="Summary"
         variant="bold"
-        onClick={resetDashboard}
+        onClick={handleSummaryClick}
       />
     </NavBarWrapper>
   );

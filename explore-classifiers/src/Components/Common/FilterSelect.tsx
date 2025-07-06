@@ -28,9 +28,18 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
 
   const handleSearch = () => {
     // TODO: handle filter and search bar content
+
+    // Cancer type page
     const value = filter === 'Cancer Type' ? comboValue : searchValue;
-    onSearch(filter, value);
+
+    // Patient page
+    if (filter === 'Patient' && value && value.trim() !== '') {
+      onSearch('Patient', value);
+    } else {
+      onSearch(filter, value);
+    }
   };
+
 
   // TODO: fetching the available cancer types from API
   const cancerTypeOptions = [
@@ -92,6 +101,9 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
               {...params}
               label="Search Cancer Type"
               variant="outlined"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSearch();
+              }}
               sx={{
                 '& .MuiOutlinedInput-root': {
                   borderRadius: '30px',
@@ -139,6 +151,9 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           placeholder="Search"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSearch();
+          }}
           style={{
             height: '40px',
             borderRadius: '30px',
