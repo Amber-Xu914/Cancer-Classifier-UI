@@ -1,0 +1,23 @@
+export const cancerTypeOptions = [
+    "Haematological malignancy",
+    "Sarcoma",
+    "Central nervous system",
+    "Solid tumour",
+    "CNS embryonal tumour",
+    "Leukaemia",
+    "Lymphoma",
+    "Solid tumour",
+    "Ependymoma",
+    "Ewing sarcoma",
+    "Glioneuronal and neuronal tumour",
+    "Medulloblastoma",
+    "Paediatric-type diffuse glioma",
+    "Rhabdomyosarcoma",
+    "Solid other",
+    "Liver tumour, Solid",
+    "Sarcoma other",
+    "Undifferentiated sarcoma",
+    "Supratentorial ependymoma, ZFTA fusion-positive",
+    "Posterior fossa A ependymoma, group PFA",
+    "Diffuse midline glioma, H3 K27-altered"
+];
