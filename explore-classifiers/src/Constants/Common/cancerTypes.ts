@@ -1,9 +1,5 @@
-export const cancerTypeOptions = [
-    "Haematological malignancy",
-    "Sarcoma",
-    "Central nervous system",
-    "Solid tumour",
-    "CNS embryonal tumour",
+const firstLevelModels = ["Haematological malignancy", "Sarcoma", "Central nervous system", "Solid tumour"];
+const secondLevelModels = ["CNS embryonal tumour",
     "Leukaemia",
     "Lymphoma",
     "Solid tumour",
@@ -15,9 +11,30 @@ export const cancerTypeOptions = [
     "Rhabdomyosarcoma",
     "Solid other",
     "Liver tumour, Solid",
-    "Sarcoma other",
-    "Undifferentiated sarcoma",
+    "Sarcoma other"];
+const thirdLevelModels = ["Undifferentiated sarcoma",
     "Supratentorial ependymoma, ZFTA fusion-positive",
     "Posterior fossa A ependymoma, group PFA",
     "Diffuse midline glioma, H3 K27-altered"
+];
+
+const firstLevelOptions = firstLevelModels.map((cancer) => {
+    const level = 'Level 1';
+    return { level, cancer };
+})
+
+const secondLevelOptions = secondLevelModels.map((cancer) => {
+    const level = 'Level 2';
+    return { level, cancer };
+})
+
+const thirdLevelOptions = thirdLevelModels.map((cancer) => {
+    const level = 'Level 3';
+    return { level, cancer };
+})
+
+export const cancerTypeOptions = [
+    ...firstLevelOptions,
+    ...secondLevelOptions,
+    ...thirdLevelOptions
 ];

@@ -6,7 +6,7 @@ import {
     TextField,
     Autocomplete,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import CustomButton from './Button';
 import zccTheme from '../../Themes/zccTheme';
@@ -19,7 +19,8 @@ interface FilterSelectProps {
 export default function FilterSelect({ onSearch }: FilterSelectProps) {
     const [filter, setFilter] = useState('');
     const [searchValue, setSearchValue] = useState('');
-    const [comboValue, setComboValue] = useState<string | null>(null);
+    const [comboValue, setComboValue] = useState<{ level: string, cancer: string } | null>(null);
+    const [patientIds, setPatientIds] = useState<string[]>([]);
 
     const handleChange = (event: SelectChangeEvent) => {
         setFilter(event.target.value);
@@ -27,13 +28,29 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
         setComboValue(null);
     };
 
-    const isValidCancerType = (value: String) => {
-        const normalizedTypes = cancerTypeOptions.map(t => t.toLowerCase());
+    useEffect(() => {
+        fetch('http://0.0.0.0:8001/sample/sample_list')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data: string[]) => {
+                setPatientIds(data);
+            })
+            .catch((error) => {
+                console.error('Error fetching patient IDs: ', error);
+            });
+    }, []);
+
+    const isValidCancerType = (value: string) => {
+        const normalizedTypes = cancerTypeOptions.map(t => t.cancer.toLowerCase());
         return normalizedTypes.includes(value.toLowerCase());
     }
 
     const handleSearch = () => {
-        const value = filter === 'Cancer Type' ? comboValue : searchValue;
+        const value = filter === 'Cancer Type' ? comboValue?.cancer ?? '' : searchValue;
 
         switch (filter) {
             case 'Cancer Type':
@@ -42,7 +59,9 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 }
                 break;
             case 'Patient':
-                if (value && value.trim() !== '') {
+                if (value && value.trim() !== ''
+                    && patientIds.includes(value)
+                ) {
                     onSearch('Patient', value);
                 }
                 break;
@@ -95,6 +114,8 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 <Autocomplete
                     disablePortal
                     options={cancerTypeOptions.sort()}
+                    groupBy={(cancer) => cancer.level}
+                    getOptionLabel={(cancer) => cancer.cancer}
                     value={comboValue}
                     onChange={(event, newValue) => setComboValue(newValue)}
                     sx={{ width: 300 }}
@@ -148,6 +169,9 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                     }}
                 />
             ) : (
+                // <Autocomplete
+                //     options={ }
+                // />
                 <input
                     type="text"
                     value={searchValue}
