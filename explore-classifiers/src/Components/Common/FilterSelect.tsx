@@ -120,26 +120,26 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             {
                 <Autocomplete<string | { cancer: string; level: string }>
                     disablePortal
-                    options={filter == 'Patient' ? patientIds : cancerTypeOptions}
+                    options={filter === 'Patient' ? patientIds : cancerTypeOptions}
                     getOptionLabel={(option) =>
-                        filter == 'Patient'
+                        filter === 'Patient'
                             ? option as string
                             : (option as { cancer: string })?.cancer ?? ''
                     }
-                    groupBy={filter == 'Cancer Type'
+                    groupBy={filter === 'Cancer Type'
                         ? (option) => (option as { cancer: string, level: string })?.level ?? ''
                         : undefined
                     }
-                    value={filter == 'Cancer Type' ? comboValue ?? null : null}
+                    value={filter === 'Cancer Type' ? comboValue ?? null : null}
                     onChange={(event, newValue) => {
-                        if (filter == 'Cancer Type') setComboValue(newValue as any ?? null);
+                        if (filter === 'Cancer Type') setComboValue(newValue as any ?? null);
                     }}
                     loading={loading}
                     sx={{ width: 300 }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            label={filter == 'Cancer Type' ? "Search Cancer Type" : 'Search Patient ID'}
+                            label={filter === 'Cancer Type' ? "Search Cancer Type" : 'Search Patient ID'}
                             variant="outlined"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleSearch();

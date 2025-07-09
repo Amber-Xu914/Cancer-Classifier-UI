@@ -15,8 +15,9 @@ interface DashboardProps {
 
 export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProps) {
     const navigate = useNavigate();
-    const [cancerType, setCancerType] = useState('ZERO2');
     const [umap, setUmap] = useState<any>(null);
+    // The file with all cancer types is called ZERO2, could probably abstract this later on
+    const [cancerType, setCancerType] = useState('ZERO2');
 
     const handleSearch = (filter: string, value: string | null) => {
         if (!value) return;
@@ -32,7 +33,9 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
         }
     };
 
+    // fetch everytime cancerType updates
     useEffect(() => {
+        // /cancer_type/{cancerType} returns a string instead of a JSON object
         fetch(`/cancer_type/${cancerType}`)
             .then((response) => {
                 if (!response.ok) {
@@ -41,7 +44,8 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
                 return response.json();
             })
             .then((data) => {
-                console.log(`Fetched UMAP for ${cancerType}:`, JSON.parse(data.plot), ` Through the link: /cancer_type/${cancerType}`);
+                // jsonify return value
+                console.log('UMAP: ', JSON.parse(data.plot));
                 setUmap(JSON.parse(data.plot));
             })
             .catch((error) => {
@@ -67,22 +71,7 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
                     <div style={{ width: '50%' }}>
                         {umap ? (<Plot
                             data={umap.data}
-                            layout={{
-                                margin: { l: 0, r: 0, b: 0, t: 20 },
-                                scene: {
-                                    xaxis: { title: 'UMAP 1', zeroline: false },
-                                    yaxis: { title: 'UMAP 2', zeroline: false },
-                                    zaxis: { title: 'UMAP 3', zeroline: false }
-                                },
-                                legend: {
-                                    x: 0.02,
-                                    y: 0.98,
-                                    bgcolor: 'rgba(255,255,255,0.5)',
-                                    bordercolor: '#ccc',
-                                    borderwidth: 1
-                                },
-                                height: 500
-                            }}
+                            layout={umap.layout}
                             style={{ width: '100%' }}
                         />) : (
                             <LoadingAnimation />
