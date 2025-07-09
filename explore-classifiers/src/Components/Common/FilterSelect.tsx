@@ -5,8 +5,9 @@ import {
     SelectChangeEvent,
     TextField,
     Autocomplete,
+    CircularProgress,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import CustomButton from './Button';
 import zccTheme from '../../Themes/zccTheme';
@@ -21,6 +22,8 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
     const [searchValue, setSearchValue] = useState('');
     const [comboValue, setComboValue] = useState<{ level: string, cancer: string } | null>(null);
     const [patientIds, setPatientIds] = useState<string[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
 
     const handleChange = (event: SelectChangeEvent) => {
         setFilter(event.target.value);
@@ -29,19 +32,22 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
     };
 
     useEffect(() => {
-        fetch('http://0.0.0.0:8001/sample/sample_list')
+        setLoading(true);
+        fetch('/sample/sample_list')
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 return response.json();
             })
-            .then((data: string[]) => {
-                setPatientIds(data);
+            .then((data) => {
+                console.log('Fetched patient IDs:', data);
+                setPatientIds(data.sample_list);
             })
             .catch((error) => {
                 console.error('Error fetching patient IDs: ', error);
-            });
+            })
+            .finally(() => { setLoading(false) });
     }, []);
 
     const isValidCancerType = (value: string) => {
@@ -169,28 +175,79 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                     }}
                 />
             ) : (
-                // <Autocomplete
-                //     options={ }
-                // />
-                <input
-                    type="text"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    placeholder="Search"
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleSearch();
-                    }}
-                    style={{
-                        height: '40px',
-                        borderRadius: '30px',
-                        border: `1px solid ${zccTheme.colours.core.grey100}`,
-                        padding: '0 16px',
-                        fontFamily: 'Roboto',
-                        fontWeight: 'bold',
-                        fontSize: '0.75rem',
-                        width: '300px',
-                    }}
+                <Autocomplete
+                    // filterOptions={(x) => x}
+                    disablePortal
+                    freeSolo
+                    options={[...patientIds].sort()}
+                    inputValue={searchValue}
+                    onInputChange={(event, newValue) => setSearchValue(newValue ?? '')}
+                    loading={loading}
+                    sx={{ width: 300 }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Search Patient ID"
+                            variant="outlined"
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleSearch();
+                            }}
+                            sx={{
+                                '& .MuiOutlinedInput-root': {
+                                    borderRadius: '30px',
+                                    height: '40px',
+                                    padding: 0,
+                                    fontWeight: 'bold',
+                                    fontSize: '0.75rem',
+                                    alignItems: 'center',
+                                },
+                                '& .MuiInputBase-input': {
+                                    padding: '0 16px',
+                                    lineHeight: '40px',
+                                    height: '40px',
+                                    boxSizing: 'border-box',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                },
+                                '& .MuiInputLabel-root': {
+                                    top: '-6px',
+                                },
+                            }}
+                            slotProps={{
+                                input: {
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                        <Fragment>
+                                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                                            {params.InputProps.endAdornment}
+                                        </Fragment>
+                                    ),
+                                }
+                            }}
+
+                        />
+                    )}
+
                 />
+                // <input
+                //     type="text"
+                //     value={searchValue}
+                //     onChange={(e) => setSearchValue(e.target.value)}
+                //     placeholder="Search"
+                //     onKeyDown={(e) => {
+                //         if (e.key === 'Enter') handleSearch();
+                //     }}
+                //     style={{
+                //         height: '40px',
+                //         borderRadius: '30px',
+                //         border: `1px solid ${zccTheme.colours.core.grey100}`,
+                //         padding: '0 16px',
+                //         fontFamily: 'Roboto',
+                //         fontWeight: 'bold',
+                //         fontSize: '0.75rem',
+                //         width: '300px',
+                //     }}
+                // />
             )}
 
             {/* Search Button */}
