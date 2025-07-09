@@ -18,17 +18,17 @@ const thirdLevelModels = ["Undifferentiated sarcoma",
     "Diffuse midline glioma, H3 K27-altered"
 ];
 
-const firstLevelOptions = firstLevelModels.map((cancer) => {
+const firstLevelOptions = firstLevelModels.sort().map((cancer) => {
     const level = 'Level 1';
     return { level, cancer };
 })
 
-const secondLevelOptions = secondLevelModels.map((cancer) => {
+const secondLevelOptions = secondLevelModels.sort().map((cancer) => {
     const level = 'Level 2';
     return { level, cancer };
 })
 
-const thirdLevelOptions = thirdLevelModels.map((cancer) => {
+const thirdLevelOptions = thirdLevelModels.sort().map((cancer) => {
     const level = 'Level 3';
     return { level, cancer };
 })

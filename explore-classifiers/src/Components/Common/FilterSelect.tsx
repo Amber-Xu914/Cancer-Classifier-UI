@@ -5,7 +5,6 @@ import {
     SelectChangeEvent,
     TextField,
     Autocomplete,
-    CircularProgress,
 } from '@mui/material';
 import { Fragment, useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
@@ -18,12 +17,11 @@ interface FilterSelectProps {
 }
 
 export default function FilterSelect({ onSearch }: FilterSelectProps) {
-    const [filter, setFilter] = useState('');
+    const [filter, setFilter] = useState('Patient');
     const [searchValue, setSearchValue] = useState('');
     const [comboValue, setComboValue] = useState<{ level: string, cancer: string } | null>(null);
     const [patientIds, setPatientIds] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false);
 
     const handleChange = (event: SelectChangeEvent) => {
         setFilter(event.target.value);
@@ -76,6 +74,9 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
         }
     };
 
+    console.log("cancerTypeOptions", cancerTypeOptions);
+    console.log("comboValue", comboValue);
+
     return (
         <Box
             sx={{
@@ -116,19 +117,29 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             </Select>
 
             {/* Search Input or ComboBox */}
-            {filter === 'Cancer Type' ? (
-                <Autocomplete
+            {
+                <Autocomplete<string | { cancer: string; level: string }>
                     disablePortal
-                    options={cancerTypeOptions.sort()}
-                    groupBy={(cancer) => cancer.level}
-                    getOptionLabel={(cancer) => cancer.cancer}
-                    value={comboValue}
-                    onChange={(event, newValue) => setComboValue(newValue)}
+                    options={filter == 'Patient' ? patientIds : cancerTypeOptions}
+                    getOptionLabel={(option) =>
+                        filter == 'Patient'
+                            ? option as string
+                            : (option as { cancer: string })?.cancer ?? ''
+                    }
+                    groupBy={filter == 'Cancer Type'
+                        ? (option) => (option as { cancer: string, level: string })?.level ?? ''
+                        : undefined
+                    }
+                    value={filter == 'Cancer Type' ? comboValue ?? null : null}
+                    onChange={(event, newValue) => {
+                        if (filter == 'Cancer Type') setComboValue(newValue as any ?? null);
+                    }}
+                    loading={loading}
                     sx={{ width: 300 }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            label="Search Cancer Type"
+                            label={filter == 'Cancer Type' ? "Search Cancer Type" : 'Search Patient ID'}
                             variant="outlined"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleSearch();
@@ -174,82 +185,7 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                         },
                     }}
                 />
-            ) : (
-                <Autocomplete
-                    // filterOptions={(x) => x}
-                    disablePortal
-                    freeSolo
-                    options={[...patientIds].sort()}
-                    inputValue={searchValue}
-                    onInputChange={(event, newValue) => setSearchValue(newValue ?? '')}
-                    loading={loading}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Search Patient ID"
-                            variant="outlined"
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleSearch();
-                            }}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    borderRadius: '30px',
-                                    height: '40px',
-                                    padding: 0,
-                                    fontWeight: 'bold',
-                                    fontSize: '0.75rem',
-                                    alignItems: 'center',
-                                },
-                                '& .MuiInputBase-input': {
-                                    padding: '0 16px',
-                                    lineHeight: '40px',
-                                    height: '40px',
-                                    boxSizing: 'border-box',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                },
-                                '& .MuiInputLabel-root': {
-                                    top: '-6px',
-                                },
-                            }}
-                            slotProps={{
-                                input: {
-                                    ...params.InputProps,
-                                    endAdornment: (
-                                        <Fragment>
-                                            {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                                            {params.InputProps.endAdornment}
-                                        </Fragment>
-                                    ),
-                                }
-                            }}
-
-                        />
-                    )}
-
-                />
-                // <input
-                //     type="text"
-                //     value={searchValue}
-                //     onChange={(e) => setSearchValue(e.target.value)}
-                //     placeholder="Search"
-                //     onKeyDown={(e) => {
-                //         if (e.key === 'Enter') handleSearch();
-                //     }}
-                //     style={{
-                //         height: '40px',
-                //         borderRadius: '30px',
-                //         border: `1px solid ${zccTheme.colours.core.grey100}`,
-                //         padding: '0 16px',
-                //         fontFamily: 'Roboto',
-                //         fontWeight: 'bold',
-                //         fontSize: '0.75rem',
-                //         width: '300px',
-                //     }}
-                // />
-            )}
-
+            }
             {/* Search Button */}
             <CustomButton
                 label=""
