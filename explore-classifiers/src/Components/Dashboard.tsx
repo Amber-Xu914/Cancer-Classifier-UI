@@ -1,56 +1,85 @@
 import FilterSelect from './Common/FilterSelect';
-import TestingUmapPlot from './TestingUmapPlot';
 import TestingSunBurstPlot from './TestingSunBurstPlot';
 import TestingCNSSunburst from './TestingCNSSunburst';
-import TestingCNSUMAP from './TestingCNSUmap';
+import Plot from 'react-plotly.js';
 import { DashboardContext } from '../Contexts/DashboardContexts';
 import { useNavigate } from 'react-router-dom';
+import { DEFAULT_SUMMARY } from '../Constants/Common/defaultSummaryText';
+import { useEffect, useState } from 'react';
+import LoadingAnimation from './Animations/LoadingAnimation';
 
 interface DashboardProps {
-  searchQuery: string;
-  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+    searchQuery: string;
+    setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProps) {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [umap, setUmap] = useState<any>(null);
+    // The file with all cancer types is called ZERO2, could probably abstract this later on
+    const [cancerType, setCancerType] = useState('ZERO2');
 
-  const handleSearch = (filter: string, value: string | null) => {
-    if (!value) return;
+    const handleSearch = (filter: string, value: string | null) => {
+        if (!value) return;
 
-    if (filter === 'Patient') {
-      navigate('/PatientResults');
-    } else if (filter === 'Cancer Type' && value.toLowerCase().includes('cns')) {
-      setSearchQuery('CNS');
-    } else {
-      setSearchQuery('default');
-    }
-  };
+        if (filter === 'Patient') {
+            navigate('/PatientResults');
+        } else if (filter === 'Cancer Type') {
+            setSearchQuery(`Showing results for: ${value}`);
+            setCancerType(value);
+        } else {
+            setSearchQuery(DEFAULT_SUMMARY);
+            setCancerType('ZERO2');
+        }
+    };
 
-  return (
-    <DashboardContext.Provider value={{ resetDashboard: () => setSearchQuery('default') }}>
-      <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-        <h1 style={{ marginBottom: '40px' }}>Methylation Classifier</h1>
-        <FilterSelect onSearch={handleSearch} />
-        <p style={{ marginTop: '40px', textAlign: 'center' }}>
-          {/* TODO: dynamic display the result summary */}
-          {searchQuery === 'CNS'
-            ? 'Showing results for Central Nervous System (CNS)'
-            : 'This summary page shows results from all classifications.'}
-        </p>
+    // fetch everytime cancerType updates
+    useEffect(() => {
+        // /cancer_type/{cancerType} returns a string instead of a JSON object
+        fetch(`/cancer_type/${cancerType}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                // jsonify return value
+                console.log('UMAP: ', JSON.parse(data.plot));
+                setUmap(JSON.parse(data.plot));
+            })
+            .catch((error) => {
+                console.error('Error fetching UMAP: ', error);
+            })
+    }, [cancerType]);
 
-        <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
-          <div style={{ width: '50%' }}>
-            {/* TODO: fetch from API to create and display the sunburst chart */}
-            <p>Testing Sunbust Chart</p>
-            {searchQuery === 'CNS' ? <TestingCNSSunburst /> : <TestingSunBurstPlot />}
-          </div>
-          <div style={{ width: '50%' }}>
-            {/* TODO: fetch from API to create and display the umap */}
-            <p>Testing UMAP</p>
-            {searchQuery === 'CNS' ? <TestingCNSUMAP /> : <TestingUmapPlot />}
-          </div>
-        </div>
-      </div>
-    </DashboardContext.Provider>
-  );
+    return (
+        <DashboardContext.Provider value={{ resetDashboard: () => setSearchQuery(DEFAULT_SUMMARY) }}>
+            <div style={{ padding: '20px', fontFamily: 'Arial' }}>
+                <h1 style={{ marginBottom: '40px' }}>Methylation Classifier</h1>
+                <FilterSelect onSearch={handleSearch} />
+                <p style={{ marginTop: '40px', textAlign: 'center' }}>
+                    {searchQuery}
+                </p>
+
+                <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
+                    <div style={{ width: '50%' }}>
+                        {/* TODO: fetch from API to create and display the sunburst chart */}
+                        <p>Testing Sunbust Chart</p>
+                        {searchQuery === 'CNS' ? <TestingCNSSunburst /> : <TestingSunBurstPlot />}
+                    </div>
+                    <div style={{ width: '50%' }}>
+                        {umap ? (<Plot
+                            data={umap.data}
+                            layout={umap.layout}
+                            style={{ width: '100%' }}
+                        />) : (
+                            <LoadingAnimation />
+                        )
+                        }
+                    </div>
+                </div>
+            </div>
+        </DashboardContext.Provider>
+    );
 }
