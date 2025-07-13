@@ -2,17 +2,33 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "ESNext",
-    "lib": ["DOM", "ESNext"],
-    "jsx": "react-jsx",
+    "lib": [
+      "DOM",
+      "ESNext"
+    ],
+    "jsx": "preserve",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "types": ["vite/client", "node", "jest", "react", "react-dom"]
+    "types": ["node", "jest", "react", "react-dom"],
+    "allowJs": true,
+    "noEmit": true,
+    "incremental": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
   "paths": {
-  "@themes/*": ["src/Themes/*"]
+    "@themes/*": [
+      "src/Themes/*"
+    ]
   },
-  "include": ["src"]
+  "include": [
+    "src",
+    "src/Components/Pages/PatientResults.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
