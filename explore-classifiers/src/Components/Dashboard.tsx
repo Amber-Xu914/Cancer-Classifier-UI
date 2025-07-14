@@ -45,8 +45,8 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
             })
             .then((data) => {
                 // jsonify return value
-                console.log('UMAP: ', JSON.parse(data.plot));
-                setUmap(JSON.parse(data.plot));
+                const plot = JSON.parse(data.plot);
+                setUmap(plot);
             })
             .catch((error) => {
                 console.error('Error fetching UMAP: ', error);

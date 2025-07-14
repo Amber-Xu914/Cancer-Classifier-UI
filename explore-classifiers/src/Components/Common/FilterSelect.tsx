@@ -39,7 +39,6 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 return response.json();
             })
             .then((data) => {
-                console.log('Fetched patient IDs:', data);
                 setPatientIds(data.sample_list);
             })
             .catch((error) => {
@@ -74,9 +73,6 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
         }
     };
 
-    console.log("cancerTypeOptions", cancerTypeOptions);
-    console.log("comboValue", comboValue);
-
     return (
         <Box
             sx={{
@@ -94,18 +90,8 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 displayEmpty
                 variant="outlined"
                 sx={{
-                    backgroundColor: zccTheme.colours.core.yellow100,
-                    color: zccTheme.colours.core.offBlack100,
-                    borderRadius: '30px',
-                    fontSize: '0.75rem',
                     minWidth: '150px',
                     height: '40px',
-                    '& .MuiSelect-icon': {
-                        color: zccTheme.colours.core.offBlack100,
-                    },
-                    '&:hover': {
-                        backgroundColor: zccTheme.colours.core.yellow150,
-                    },
                 }}
                 renderValue={(selected) => selected || '+ Add Filter'}
             >
@@ -120,6 +106,7 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             {
                 <Autocomplete<string | { cancer: string; level: string }>
                     disablePortal
+
                     options={filter === 'Patient' ? patientIds : cancerTypeOptions}
                     getOptionLabel={(option) =>
                         filter === 'Patient'
@@ -132,25 +119,26 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                     }
                     value={filter === 'Cancer Type' ? comboValue ?? null : null}
                     onChange={(event, newValue) => {
-                        if (filter === 'Cancer Type') setComboValue(newValue as any ?? null);
+                        if (filter === 'Cancer Type') {
+                            setComboValue((newValue as any) ?? null);
+                        } else {
+                            setSearchValue(newValue as string ?? '')
+                        }
                     }}
                     loading={loading}
                     sx={{ width: 300 }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            label={filter === 'Cancer Type' ? "Search Cancer Type" : 'Search Patient ID'}
+                            placeholder={filter === 'Cancer Type' ? "Search Cancer Type" : 'Search Patient ID'}
                             variant="outlined"
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') handleSearch();
                             }}
                             sx={{
                                 '& .MuiOutlinedInput-root': {
-                                    borderRadius: '30px',
                                     height: '40px',
                                     padding: 0,
-                                    fontWeight: 'bold',
-                                    fontSize: '0.75rem',
                                     alignItems: 'center',
                                 },
                                 '& .MuiInputBase-input': {
