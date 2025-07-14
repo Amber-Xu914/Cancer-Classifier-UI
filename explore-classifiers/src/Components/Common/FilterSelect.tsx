@@ -29,6 +29,9 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
         setComboValue(null);
     };
 
+    // Fetch patient IDs on component mount
+    // This assumes the endpoint returns a JSON object with a 'sample_list' property
+    // containing an array of patient IDs
     useEffect(() => {
         setLoading(true);
         fetch('/sample/sample_list')
@@ -47,11 +50,13 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             .finally(() => { setLoading(false) });
     }, []);
 
+    // Validate cancer type against the options
     const isValidCancerType = (value: string) => {
         const normalizedTypes = cancerTypeOptions.map(t => t.cancer.toLowerCase());
         return normalizedTypes.includes(value.toLowerCase());
     }
 
+    // Handle search based on filter type
     const handleSearch = () => {
         const value = filter === 'Cancer Type' ? comboValue?.cancer ?? '' : searchValue;
 
@@ -62,9 +67,7 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 }
                 break;
             case 'Patient':
-                if (value && value.trim() !== ''
-                    && patientIds.includes(value)
-                ) {
+                if (value && value.trim() !== '' && patientIds.includes(value)) {
                     onSearch('Patient', value);
                 }
                 break;
@@ -106,7 +109,6 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             {
                 <Autocomplete<string | { cancer: string; level: string }>
                     disablePortal
-
                     options={filter === 'Patient' ? patientIds : cancerTypeOptions}
                     getOptionLabel={(option) =>
                         filter === 'Patient'
