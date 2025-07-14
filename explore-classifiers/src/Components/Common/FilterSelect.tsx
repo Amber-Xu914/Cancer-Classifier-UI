@@ -6,10 +6,9 @@ import {
     TextField,
     Autocomplete,
 } from '@mui/material';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import CustomButton from './Button';
-import zccTheme from '../../Themes/zccTheme';
 import { cancerTypeOptions } from '../../Constants/Common/cancerTypes';
 
 interface FilterSelectProps {
@@ -91,95 +90,94 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 value={filter}
                 onChange={handleChange}
                 displayEmpty
-                variant="outlined"
+                variant='outlined'
                 sx={{
                     minWidth: '150px',
                     height: '40px',
                 }}
                 renderValue={(selected) => selected || '+ Add Filter'}
             >
-                <MenuItem value="" disabled>
+                <MenuItem value='' disabled>
                     + Add Filter
                 </MenuItem>
-                <MenuItem value="Cancer Type">Cancer Type</MenuItem>
-                <MenuItem value="Patient">Patient</MenuItem>
+                <MenuItem value='Cancer Type'>Cancer Type</MenuItem>
+                <MenuItem value='Patient'>Patient</MenuItem>
             </Select>
 
             {/* Search Input or ComboBox */}
-            {
-                <Autocomplete<string | { cancer: string; level: string }>
-                    disablePortal
-                    options={filter === 'Patient' ? patientIds : cancerTypeOptions}
-                    getOptionLabel={(option) =>
-                        filter === 'Patient'
-                            ? option as string
-                            : (option as { cancer: string })?.cancer ?? ''
+            <Autocomplete<string | { cancer: string; level: string }>
+                disablePortal
+                options={filter === 'Patient' ? patientIds : cancerTypeOptions}
+                getOptionLabel={(option) =>
+                    filter === 'Patient'
+                        ? option as string
+                        : (option as { cancer: string })?.cancer ?? ''
+                }
+                groupBy={filter === 'Cancer Type'
+                    ? (option) => (option as { cancer: string, level: string })?.level ?? ''
+                    : undefined
+                }
+                value={filter === 'Cancer Type' ? comboValue ?? null : null}
+                onChange={(event, newValue) => {
+                    if (filter === 'Cancer Type') {
+                        setComboValue((newValue as any) ?? null);
+                    } else {
+                        setSearchValue(newValue as string ?? '')
                     }
-                    groupBy={filter === 'Cancer Type'
-                        ? (option) => (option as { cancer: string, level: string })?.level ?? ''
-                        : undefined
-                    }
-                    value={filter === 'Cancer Type' ? comboValue ?? null : null}
-                    onChange={(event, newValue) => {
-                        if (filter === 'Cancer Type') {
-                            setComboValue((newValue as any) ?? null);
-                        } else {
-                            setSearchValue(newValue as string ?? '')
-                        }
-                    }}
-                    loading={loading}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            placeholder={filter === 'Cancer Type' ? "Search Cancer Type" : 'Search Patient ID'}
-                            variant="outlined"
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleSearch();
-                            }}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    height: '40px',
-                                    padding: 0,
-                                    alignItems: 'center',
-                                },
-                                '& .MuiInputBase-input': {
-                                    padding: '0 16px',
-                                    lineHeight: '40px',
-                                    height: '40px',
-                                    boxSizing: 'border-box',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                },
-                                '& .MuiInputLabel-root': {
-                                    top: '-6px',
-                                },
-                            }}
-                        />
-                    )}
-                    slotProps={{
-                        paper: {
-                            sx: {
-                                textAlign: 'left',
+                }}
+                loading={loading}
+                popupIcon={false}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        placeholder={filter === 'Cancer Type' ? 'Search Cancer Type' : 'Search Patient ID'}
+                        variant='outlined'
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSearch();
+                        }}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                height: '40px',
+                                padding: 0,
+                                alignItems: 'center',
                             },
+                            '& .MuiInputBase-input': {
+                                padding: '0 16px',
+                                lineHeight: '40px',
+                                height: '40px',
+                                boxSizing: 'border-box',
+                                display: 'flex',
+                                alignItems: 'center',
+                            },
+                            '& .MuiInputLabel-root': {
+                                top: '-6px',
+                            },
+                        }}
+                    />
+                )}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            textAlign: 'left',
                         },
-                        popper: {
-                            modifiers: [
-                                {
-                                    name: 'offset',
-                                    options: {
-                                        offset: [0, 4],
-                                    },
+                    },
+                    popper: {
+                        modifiers: [
+                            {
+                                name: 'offset',
+                                options: {
+                                    offset: [0, 4],
                                 },
-                            ],
-                        },
-                    }}
-                />
-            }
+                            },
+                        ],
+                    },
+                }}
+            />
             {/* Search Button */}
             <CustomButton
-                label=""
-                variant="bold"
+                label=''
+                variant='bold'
                 onClick={handleSearch}
                 startIcon={<Search size={16} />}
                 sx={{
