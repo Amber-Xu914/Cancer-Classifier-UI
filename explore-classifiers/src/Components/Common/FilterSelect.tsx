@@ -6,10 +6,9 @@ import {
     TextField,
     Autocomplete,
 } from '@mui/material';
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import CustomButton from './Button';
-import zccTheme from '../../Themes/zccTheme';
 import { cancerTypeOptions } from '../../Constants/Common/cancerTypes';
 
 interface FilterSelectProps {
@@ -29,6 +28,9 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
         setComboValue(null);
     };
 
+    // Fetch patient IDs on component mount
+    // This assumes the endpoint returns a JSON object with a 'sample_list' property
+    // containing an array of patient IDs
     useEffect(() => {
         setLoading(true);
         fetch('/sample/sample_list')
@@ -39,7 +41,6 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 return response.json();
             })
             .then((data) => {
-                console.log('Fetched patient IDs:', data);
                 setPatientIds(data.sample_list);
             })
             .catch((error) => {
@@ -48,11 +49,13 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             .finally(() => { setLoading(false) });
     }, []);
 
+    // Validate cancer type against the options
     const isValidCancerType = (value: string) => {
         const normalizedTypes = cancerTypeOptions.map(t => t.cancer.toLowerCase());
         return normalizedTypes.includes(value.toLowerCase());
     }
 
+    // Handle search based on filter type
     const handleSearch = () => {
         const value = filter === 'Cancer Type' ? comboValue?.cancer ?? '' : searchValue;
 
@@ -63,9 +66,7 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 }
                 break;
             case 'Patient':
-                if (value && value.trim() !== ''
-                    && patientIds.includes(value)
-                ) {
+                if (value && value.trim() !== '' && patientIds.includes(value)) {
                     onSearch('Patient', value);
                 }
                 break;
@@ -73,9 +74,6 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 onSearch(filter, value);
         }
     };
-
-    console.log("cancerTypeOptions", cancerTypeOptions);
-    console.log("comboValue", comboValue);
 
     return (
         <Box
@@ -92,104 +90,94 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 value={filter}
                 onChange={handleChange}
                 displayEmpty
-                variant="outlined"
+                variant='outlined'
                 sx={{
-                    backgroundColor: zccTheme.colours.core.yellow100,
-                    color: zccTheme.colours.core.offBlack100,
-                    borderRadius: '30px',
-                    fontSize: '0.75rem',
                     minWidth: '150px',
                     height: '40px',
-                    '& .MuiSelect-icon': {
-                        color: zccTheme.colours.core.offBlack100,
-                    },
-                    '&:hover': {
-                        backgroundColor: zccTheme.colours.core.yellow150,
-                    },
                 }}
                 renderValue={(selected) => selected || '+ Add Filter'}
             >
-                <MenuItem value="" disabled>
+                <MenuItem value='' disabled>
                     + Add Filter
                 </MenuItem>
-                <MenuItem value="Cancer Type">Cancer Type</MenuItem>
-                <MenuItem value="Patient">Patient</MenuItem>
+                <MenuItem value='Cancer Type'>Cancer Type</MenuItem>
+                <MenuItem value='Patient'>Patient</MenuItem>
             </Select>
 
             {/* Search Input or ComboBox */}
-            {
-                <Autocomplete<string | { cancer: string; level: string }>
-                    disablePortal
-                    options={filter === 'Patient' ? patientIds : cancerTypeOptions}
-                    getOptionLabel={(option) =>
-                        filter === 'Patient'
-                            ? option as string
-                            : (option as { cancer: string })?.cancer ?? ''
+            <Autocomplete<string | { cancer: string; level: string }>
+                disablePortal
+                options={filter === 'Patient' ? patientIds : cancerTypeOptions}
+                getOptionLabel={(option) =>
+                    filter === 'Patient'
+                        ? option as string
+                        : (option as { cancer: string })?.cancer ?? ''
+                }
+                groupBy={filter === 'Cancer Type'
+                    ? (option) => (option as { cancer: string, level: string })?.level ?? ''
+                    : undefined
+                }
+                value={filter === 'Cancer Type' ? comboValue ?? null : null}
+                onChange={(event, newValue) => {
+                    if (filter === 'Cancer Type') {
+                        setComboValue((newValue as any) ?? null);
+                    } else {
+                        setSearchValue(newValue as string ?? '')
                     }
-                    groupBy={filter === 'Cancer Type'
-                        ? (option) => (option as { cancer: string, level: string })?.level ?? ''
-                        : undefined
-                    }
-                    value={filter === 'Cancer Type' ? comboValue ?? null : null}
-                    onChange={(event, newValue) => {
-                        if (filter === 'Cancer Type') setComboValue(newValue as any ?? null);
-                    }}
-                    loading={loading}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label={filter === 'Cancer Type' ? "Search Cancer Type" : 'Search Patient ID'}
-                            variant="outlined"
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') handleSearch();
-                            }}
-                            sx={{
-                                '& .MuiOutlinedInput-root': {
-                                    borderRadius: '30px',
-                                    height: '40px',
-                                    padding: 0,
-                                    fontWeight: 'bold',
-                                    fontSize: '0.75rem',
-                                    alignItems: 'center',
-                                },
-                                '& .MuiInputBase-input': {
-                                    padding: '0 16px',
-                                    lineHeight: '40px',
-                                    height: '40px',
-                                    boxSizing: 'border-box',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                },
-                                '& .MuiInputLabel-root': {
-                                    top: '-6px',
-                                },
-                            }}
-                        />
-                    )}
-                    slotProps={{
-                        paper: {
-                            sx: {
-                                textAlign: 'left',
+                }}
+                loading={loading}
+                popupIcon={false}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        placeholder={filter === 'Cancer Type' ? 'Search Cancer Type' : 'Search Patient ID'}
+                        variant='outlined'
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSearch();
+                        }}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                height: '40px',
+                                padding: 0,
+                                alignItems: 'center',
                             },
+                            '& .MuiInputBase-input': {
+                                padding: '0 16px',
+                                lineHeight: '40px',
+                                height: '40px',
+                                boxSizing: 'border-box',
+                                display: 'flex',
+                                alignItems: 'center',
+                            },
+                            '& .MuiInputLabel-root': {
+                                top: '-6px',
+                            },
+                        }}
+                    />
+                )}
+                slotProps={{
+                    paper: {
+                        sx: {
+                            textAlign: 'left',
                         },
-                        popper: {
-                            modifiers: [
-                                {
-                                    name: 'offset',
-                                    options: {
-                                        offset: [0, 4],
-                                    },
+                    },
+                    popper: {
+                        modifiers: [
+                            {
+                                name: 'offset',
+                                options: {
+                                    offset: [0, 4],
                                 },
-                            ],
-                        },
-                    }}
-                />
-            }
+                            },
+                        ],
+                    },
+                }}
+            />
             {/* Search Button */}
             <CustomButton
-                label=""
-                variant="bold"
+                label=''
+                variant='bold'
                 onClick={handleSearch}
                 startIcon={<Search size={16} />}
                 sx={{
