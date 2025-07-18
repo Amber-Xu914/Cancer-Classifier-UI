@@ -7,6 +7,7 @@ import Dashboard from './Components/Dashboard';
 import PatientResults from './Components/PatientResults';
 import { DashboardContext } from './Contexts/DashboardContexts';
 import { DEFAULT_SUMMARY } from './Constants/Common/DashboardDefaults';
+import DashboardPage from './Components/DashboardPage';
 
 function App() {
     const [searchQuery, setSearchQuery] = useState<string>(DEFAULT_SUMMARY);
@@ -14,7 +15,7 @@ function App() {
     return (
         <ThemeProvider theme={zccTheme}>
             <BrowserRouter>
-                <DashboardContext.Provider value={{ resetDashboard: () => setSearchQuery(DEFAULT_SUMMARY) }}>
+                <DashboardPage>
                     <div className="flex flex-col h-screen">
                         <NavBar />
 
@@ -26,13 +27,13 @@ function App() {
                                 />
                                 <Route
                                     path="/dashboard"
-                                    element={<Dashboard searchQuery={searchQuery} setSearchQuery={setSearchQuery} />}
+                                    element={<Dashboard />}
                                 />
                                 <Route path="/PatientResults" element={<PatientResults />} />
                             </Routes>
                         </div>
                     </div>
-                </DashboardContext.Provider>
+                </DashboardPage>
             </BrowserRouter>
         </ThemeProvider>
     );

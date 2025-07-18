@@ -25,8 +25,8 @@ export default function NavBar() {
     const navigate = useNavigate();
 
     const handleSummaryClick = () => {
-        navigate('/dashboard');
         resetDashboard();
+        navigate('/dashboard', { replace: true });
     };
 
     return (

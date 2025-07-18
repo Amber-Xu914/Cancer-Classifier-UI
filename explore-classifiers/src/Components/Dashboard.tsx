@@ -6,16 +6,11 @@ import FilterSelect from './Common/FilterSelect';
 import SunBurstPlot from './SunBurstPlot';
 import Umap from './Umap';
 
-interface DashboardProps {
-    searchQuery: string;
-    setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProps) {
+export default function Dashboard() {
     const navigate = useNavigate();
     const { resetDashboard } = useDashboard();
     const location = useLocation();
-    const [cancerType, setCancerType] = useState(DEFAULT_CANCER_TYPE);
+    const { searchQuery, setSearchQuery, cancerType, setCancerType } = useDashboard();
 
     useEffect(() => {
         if (location.pathname === '/dashboard' || location.pathname === '/') {
@@ -50,28 +45,21 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
     }, [setSearchQuery, setCancerType]);
 
     return (
-        <DashboardContext.Provider value={{
-            resetDashboard: () => {
-                setSearchQuery(DEFAULT_SUMMARY);
-                setCancerType(DEFAULT_CANCER_TYPE);
-            }
-        }}>
-            <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-                <h1 style={{ marginBottom: '40px' }}>Methylation Classifier</h1>
-                <FilterSelect onSearch={handleSearch} />
-                <p style={{ marginTop: '40px', textAlign: 'center' }}>
-                    {searchQuery}
-                </p>
+        <div style={{ padding: '20px', fontFamily: 'Arial' }}>
+            <h1 style={{ marginBottom: '40px' }}>Methylation Classifier</h1>
+            <FilterSelect onSearch={handleSearch} />
+            <p style={{ marginTop: '40px', textAlign: 'center' }}>
+                {searchQuery}
+            </p>
 
-                <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
-                    <div style={{ width: '50%' }}>
-                        <SunBurstPlot onClick={handleSunburstClick} />
-                    </div>
-                    <div style={{ width: '50%' }}>
-                        <Umap cancerType={cancerType} />
-                    </div>
+            <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
+                <div style={{ width: '50%' }}>
+                    <SunBurstPlot onClick={handleSunburstClick} />
+                </div>
+                <div style={{ width: '50%' }}>
+                    <Umap cancerType={cancerType} />
                 </div>
             </div>
-        </DashboardContext.Provider>
+        </div>
     );
 }
