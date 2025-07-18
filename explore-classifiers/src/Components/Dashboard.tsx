@@ -14,7 +14,6 @@ interface DashboardProps {
 
 export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProps) {
     const navigate = useNavigate();
-    const [umap, setUmap] = useState<any>(null);
     // The file with all cancer types is called ZERO2, could probably abstract this later on
     const [cancerType, setCancerType] = useState('ZERO2');
 
@@ -33,28 +32,6 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
             setCancerType('ZERO2');
         }
     };
-
-    // Fetch UMAP data based on the selected cancer type
-    // This is called when the cancerType state changes
-    // The endpoint /cancer_type/{cancerType} returns a stringified JSON object with
-    // 'plot' property containing the UMAP data in JSON format
-    // The plot data is expected to be in the format compatible with Plotly.js
-    useEffect(() => {
-        fetch(`/cancer_type/${cancerType}`)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                const plot = JSON.parse(data.plot);
-                setUmap(plot);
-            })
-            .catch((error) => {
-                console.error('Error fetching UMAP: ', error);
-            })
-    }, [cancerType]);
 
     return (
         <DashboardContext.Provider value={{
