@@ -9,6 +9,7 @@ interface UmapProps {
 const Umap = ({ cancerType }: UmapProps) => {
     const [umap, setUmap] = useState<any>(null);
 
+    // Fetch UMAP data based on the selected cancer type
     useEffect(() => {
         fetch(`/cancer_type/${cancerType}`)
             .then((response) => {

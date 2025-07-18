@@ -3,13 +3,12 @@ import Plot from 'react-plotly.js';
 import { corePalette } from '../Themes/colours';
 import zccTheme from '../Themes/zccTheme';
 
-interface sunburstClickData {
-    onSearch: (filter: string, value: string | null) => void;
+interface SunBurstPlotProps {
+    onClick: (value: string | null) => void;
 }
 
-const SunBurstPlot = ({ onSearch }: sunburstClickData) => {
+const SunBurstPlot = ({ onClick }: SunBurstPlotProps) => {
     const [cancerTypeData, setCancerTypeData] = useState([{ parent: '', child: '', count: 0 }]);
-    const plotRef = useRef<any>(null);
     const clickDataRef = useRef<any>(null);
 
     useEffect(() => {
@@ -34,15 +33,15 @@ const SunBurstPlot = ({ onSearch }: sunburstClickData) => {
 
     const afterAnimation = () => {
         if (clickDataRef.current) {
+            console.log('Sunburst click data:', clickDataRef.current);
             const { data, nextLevel, points } = clickDataRef.current;
-            onSearch('Cancer Type', nextLevel);
+            onClick(nextLevel);
             clickDataRef.current = null; // Reset after handling
         }
     }
 
     return (
         <Plot
-            ref={plotRef}
             id="sunburst-plot"
             data={[
                 {

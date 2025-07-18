@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEFAULT_SUMMARY } from '../Constants/Common/defaultSummaryText';
 import { DashboardContext } from '../Contexts/DashboardContexts';
@@ -16,7 +16,7 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
     const navigate = useNavigate();
     // The file with all cancer types is called ZERO2, could probably abstract this later on
     const [cancerType, setCancerType] = useState('ZERO2');
-
+    console.log('Dashboard rendered');
     // Handle search based on filter type
     // This function is called when the user clicks the search button in FilterSelect
     const handleSearch = (filter: string, value: string | null) => {
@@ -32,6 +32,16 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
             setCancerType('ZERO2');
         }
     };
+
+    const handleSunburstClick = useCallback((value: string | null) => {
+        if (value) {
+            setSearchQuery(`Showing results for: ${value}`);
+            setCancerType(value);
+        }
+        if (value === 'ZERO2') {
+            setSearchQuery(DEFAULT_SUMMARY);
+        }
+    }, [setSearchQuery, setCancerType]);
 
     return (
         <DashboardContext.Provider value={{
@@ -49,9 +59,7 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
 
                 <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
                     <div style={{ width: '50%' }}>
-                        {/* TODO: fetch from API to create and display the sunburst chart */}
-                        <p>Testing Sunbust Chart</p>
-                        {<SunBurstPlot onSearch={handleSearch} />}
+                        <SunBurstPlot onClick={handleSunburstClick} />
                     </div>
                     <div style={{ width: '50%' }}>
                         <Umap cancerType={cancerType} />
