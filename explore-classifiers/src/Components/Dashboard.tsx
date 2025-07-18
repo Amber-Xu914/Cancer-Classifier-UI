@@ -1,12 +1,11 @@
-import FilterSelect from './Common/FilterSelect';
-import TestingSunBurstPlot from './TestingSunBurstPlot';
-import TestingCNSSunburst from './TestingCNSSunburst';
-import Plot from 'react-plotly.js';
-import { DashboardContext } from '../Contexts/DashboardContexts';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DEFAULT_SUMMARY } from '../Constants/Common/defaultSummaryText';
-import { useEffect, useState } from 'react';
+import { DashboardContext } from '../Contexts/DashboardContexts';
 import LoadingAnimation from './Animations/LoadingAnimation';
+import FilterSelect from './Common/FilterSelect';
+import SunBurstPlot from './SunBurstPlot';
+import Umap from './Umap';
 
 interface DashboardProps {
     searchQuery: string;
@@ -26,7 +25,7 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
 
         if (filter === 'Patient') {
             navigate('/PatientResults');
-        } else if (filter === 'Cancer Type') {
+        } else if (filter === 'Cancer Type' && value !== 'ZERO2') {
             setSearchQuery(`Showing results for: ${value}`);
             setCancerType(value);
         } else {
@@ -58,7 +57,12 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
     }, [cancerType]);
 
     return (
-        <DashboardContext.Provider value={{ resetDashboard: () => setSearchQuery(DEFAULT_SUMMARY) }}>
+        <DashboardContext.Provider value={{
+            resetDashboard: () => {
+                setSearchQuery(DEFAULT_SUMMARY);
+                setCancerType('ZERO2');
+            }
+        }}>
             <div style={{ padding: '20px', fontFamily: 'Arial' }}>
                 <h1 style={{ marginBottom: '40px' }}>Methylation Classifier</h1>
                 <FilterSelect onSearch={handleSearch} />
@@ -70,17 +74,10 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
                     <div style={{ width: '50%' }}>
                         {/* TODO: fetch from API to create and display the sunburst chart */}
                         <p>Testing Sunbust Chart</p>
-                        {searchQuery === 'CNS' ? <TestingCNSSunburst /> : <TestingSunBurstPlot />}
+                        {<SunBurstPlot onSearch={handleSearch} />}
                     </div>
                     <div style={{ width: '50%' }}>
-                        {umap ? (<Plot
-                            data={umap.data}
-                            layout={umap.layout}
-                            style={{ width: '100%' }}
-                        />) : (
-                            <LoadingAnimation />
-                        )
-                        }
+                        <Umap cancerType={cancerType} />
                     </div>
                 </div>
             </div>
