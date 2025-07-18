@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import zccTheme from './Themes/zccTheme';
 import NavBar from './Components/NavBar';
 import Dashboard from './Components/Dashboard';
 import PatientResults from './Components/PatientResults';
 import { DashboardContext } from './Contexts/DashboardContexts';
-import { DEFAULT_SUMMARY } from './Constants/Common/defaultSummaryText';
+import { DEFAULT_SUMMARY } from './Constants/Common/DashboardDefaults';
 
 function App() {
     const [searchQuery, setSearchQuery] = useState<string>(DEFAULT_SUMMARY);
@@ -22,7 +22,7 @@ function App() {
                             <Routes>
                                 <Route
                                     path="/"
-                                    element={<Dashboard searchQuery={searchQuery} setSearchQuery={setSearchQuery} />}
+                                    element={<Navigate to="/dashboard" />}
                                 />
                                 <Route
                                     path="/dashboard"

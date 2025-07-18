@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { DEFAULT_SUMMARY } from '../Constants/Common/defaultSummaryText';
-import { DashboardContext } from '../Contexts/DashboardContexts';
-import LoadingAnimation from './Animations/LoadingAnimation';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/DashboardDefaults';
+import { DashboardContext, useDashboard } from '../Contexts/DashboardContexts';
 import FilterSelect from './Common/FilterSelect';
 import SunBurstPlot from './SunBurstPlot';
 import Umap from './Umap';
@@ -14,9 +13,16 @@ interface DashboardProps {
 
 export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProps) {
     const navigate = useNavigate();
-    // The file with all cancer types is called ZERO2, could probably abstract this later on
-    const [cancerType, setCancerType] = useState('ZERO2');
-    console.log('Dashboard rendered');
+    const { resetDashboard } = useDashboard();
+    const location = useLocation();
+    const [cancerType, setCancerType] = useState(DEFAULT_CANCER_TYPE);
+
+    useEffect(() => {
+        if (location.pathname === '/dashboard' || location.pathname === '/') {
+            resetDashboard();
+        }
+    }, [location.pathname]);
+
     // Handle search based on filter type
     // This function is called when the user clicks the search button in FilterSelect
     const handleSearch = (filter: string, value: string | null) => {
@@ -24,12 +30,12 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
 
         if (filter === 'Patient') {
             navigate('/PatientResults');
-        } else if (filter === 'Cancer Type' && value !== 'ZERO2') {
+        } else if (filter === 'Cancer Type' && value !== DEFAULT_CANCER_TYPE) {
             setSearchQuery(`Showing results for: ${value}`);
             setCancerType(value);
         } else {
             setSearchQuery(DEFAULT_SUMMARY);
-            setCancerType('ZERO2');
+            setCancerType(DEFAULT_CANCER_TYPE);
         }
     };
 
@@ -38,7 +44,7 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
             setSearchQuery(`Showing results for: ${value}`);
             setCancerType(value);
         }
-        if (value === 'ZERO2') {
+        if (value === DEFAULT_CANCER_TYPE) {
             setSearchQuery(DEFAULT_SUMMARY);
         }
     }, [setSearchQuery, setCancerType]);
@@ -47,7 +53,7 @@ export default function Dashboard({ searchQuery, setSearchQuery }: DashboardProp
         <DashboardContext.Provider value={{
             resetDashboard: () => {
                 setSearchQuery(DEFAULT_SUMMARY);
-                setCancerType('ZERO2');
+                setCancerType(DEFAULT_CANCER_TYPE);
             }
         }}>
             <div style={{ padding: '20px', fontFamily: 'Arial' }}>
