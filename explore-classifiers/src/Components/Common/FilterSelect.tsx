@@ -8,8 +8,8 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
-import CustomButton from './Button';
 import { cancerTypeOptions } from '../../Constants/Common/cancerTypes';
+import { corePalette } from '../../Themes/colours';
 
 interface FilterSelectProps {
     onSearch: (filter: string, value: string | null) => void;
@@ -21,6 +21,8 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
     const [comboValue, setComboValue] = useState<{ level: string, cancer: string } | null>(null);
     const [patientIds, setPatientIds] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
+    const [open, setOpen] = useState(false);
+    // const [inputValue, setInputValue] = useState('');
 
     const handleChange = (event: SelectChangeEvent) => {
         setFilter(event.target.value);
@@ -107,11 +109,14 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             {/* Search Input or ComboBox */}
             <Autocomplete<string | { cancer: string; level: string }>
                 disablePortal
+                autoHighlight
+                autoSelect
                 options={filter === 'Patient' ? patientIds : cancerTypeOptions}
+                
                 getOptionLabel={(option) =>
                     filter === 'Patient'
-                        ? option as string
-                        : (option as { cancer: string })?.cancer ?? ''
+                    ? option as string
+                    : (option as { cancer: string })?.cancer ?? ''
                 }
                 groupBy={filter === 'Cancer Type'
                     ? (option) => (option as { cancer: string, level: string })?.level ?? ''
@@ -120,75 +125,110 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 value={filter === 'Cancer Type' ? comboValue ?? null : null}
                 onChange={(event, newValue) => {
                     if (filter === 'Cancer Type') {
-                        setComboValue((newValue as any) ?? null);
+                    setComboValue((newValue as any) ?? null);
                     } else {
-                        setSearchValue(newValue as string ?? '')
+                    setSearchValue(newValue as string ?? '');
                     }
                 }}
                 loading={loading}
-                popupIcon={false}
-                sx={{ width: 300 }}
+                popupIcon={null}
+                componentsProps={{
+                    popupIndicator: {
+                    sx: {
+                        display: 'none',
+                    },
+                    },
+                }}
+                filterOptions={(options, state) => {
+                    const input = state.inputValue.toLowerCase();
+
+                    // Patient filter: string[]
+                    if (filter === 'Patient') {
+                        return (options as string[]).filter((option) =>
+                        option.toLowerCase().includes(input)
+                        );
+                    }
+
+                    // Cancer Type filter: { cancer, level }[]
+                    return (options as { cancer: string; level: string }[]).filter((option) =>
+                        option.cancer.toLowerCase().includes(input)
+                    );
+                    }}
+                noOptionsText="No results"
+                sx={{ width: 500 }}
                 renderInput={(params) => (
                     <TextField
-                        {...params}
-                        placeholder={filter === 'Cancer Type' ? 'Search Cancer Type' : 'Search Patient ID'}
-                        variant='outlined'
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleSearch();
-                        }}
-                        sx={{
-                            '& .MuiOutlinedInput-root': {
-                                height: '40px',
-                                padding: 0,
-                                alignItems: 'center',
-                            },
-                            '& .MuiInputBase-input': {
-                                padding: '0 16px',
-                                lineHeight: '40px',
-                                height: '40px',
-                                boxSizing: 'border-box',
+                    {...params}
+                    placeholder={
+                        filter === 'Cancer Type' ? 'Search Cancer Type' : 'Search Patient ID'
+                    }
+                    variant="outlined"
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') handleSearch();
+                    }}
+                    InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            {params.InputProps.endAdornment}
+                            <Box
+                                sx={{
+                                ml: 1,
                                 display: 'flex',
                                 alignItems: 'center',
-                            },
-                            '& .MuiInputLabel-root': {
-                                top: '-6px',
-                            },
-                        }}
+                                cursor: 'pointer',
+                                color: corePalette.green150,
+                                }}
+                                onClick={() => {
+                                    setOpen(false);
+                                    if (filter === 'Cancer Type') {
+                                        if (comboValue) handleSearch();
+                                    } else {
+                                        if (searchValue) handleSearch();
+                                    }
+                                }}
+                            >
+                                <Search size={18} />
+                            </Box>
+                        </Box>
+                        ),
+                    }}
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                        height: '40px',
+                        padding: 0,
+                        alignItems: 'center',
+                        },
+                        '& .MuiInputBase-input': {
+                        padding: '0 16px',
+                        lineHeight: '40px',
+                        height: '40px',
+                        boxSizing: 'border-box',
+                        display: 'flex',
+                        alignItems: 'center',
+                        },
+                        '& .MuiInputLabel-root': {
+                        top: '-6px',
+                        },
+                    }}
                     />
                 )}
                 slotProps={{
                     paper: {
-                        sx: {
-                            textAlign: 'left',
-                        },
+                    sx: {
+                        textAlign: 'left',
+                    },
                     },
                     popper: {
-                        modifiers: [
-                            {
-                                name: 'offset',
-                                options: {
-                                    offset: [0, 4],
-                                },
-                            },
-                        ],
+                    modifiers: [
+                        {
+                        name: 'offset',
+                        options: {
+                            offset: [0, 4],
+                        },
+                        },
+                    ],
                     },
-                }}
-            />
-            {/* Search Button */}
-            <CustomButton
-                label=''
-                variant='bold'
-                onClick={handleSearch}
-                startIcon={<Search size={16} />}
-                sx={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    padding: 0,
-                    minWidth: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
                 }}
             />
         </Box>
