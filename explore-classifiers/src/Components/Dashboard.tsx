@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/DashboardDefaults';
-import { DashboardContext, useDashboard } from '../Contexts/DashboardContexts';
+import { useDashboard } from '../Contexts/DashboardContexts';
 import FilterSelect from './Common/FilterSelect';
 import SunBurstPlot from './SunBurstPlot';
 import Umap from './Umap';

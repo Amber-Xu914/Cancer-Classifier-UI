@@ -1,9 +1,8 @@
 import { useState } from "react";
-import Dashboard from "./Dashboard";
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from "../Constants/Common/DashboardDefaults";
 import { DashboardContext } from "../Contexts/DashboardContexts";
 
-export default function DashboardPage({ children }: { children: React.ReactNode }) {
+export default function MethylationClassifierProvider({ children }: { children: React.ReactNode }) {
     const [searchQuery, setSearchQuery] = useState(DEFAULT_SUMMARY);
     const [cancerType, setCancerType] = useState(DEFAULT_CANCER_TYPE);
 

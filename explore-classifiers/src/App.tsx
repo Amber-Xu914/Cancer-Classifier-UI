@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import zccTheme from './Themes/zccTheme';
-import NavBar from './Components/NavBar';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Dashboard from './Components/Dashboard';
+import MethylationClassifierProvider from './Components/MethylationClassifierProvider';
+import NavBar from './Components/NavBar';
 import PatientResults from './Components/PatientResults';
-import { DashboardContext } from './Contexts/DashboardContexts';
-import { DEFAULT_SUMMARY } from './Constants/Common/DashboardDefaults';
-import DashboardPage from './Components/DashboardPage';
+import zccTheme from './Themes/zccTheme';
 
 function App() {
-    const [searchQuery, setSearchQuery] = useState<string>(DEFAULT_SUMMARY);
-
     return (
         <ThemeProvider theme={zccTheme}>
             <BrowserRouter>
-                <DashboardPage>
+                <MethylationClassifierProvider>
                     <div className="flex flex-col h-screen">
                         <NavBar />
 
@@ -33,7 +28,7 @@ function App() {
                             </Routes>
                         </div>
                     </div>
-                </DashboardPage>
+                </MethylationClassifierProvider>
             </BrowserRouter>
         </ThemeProvider>
     );

@@ -1,10 +1,9 @@
 import { AppBar, Box, styled } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CustomTabs } from './Common/Tabs';
-import CustomButton from './Common/Button';
 import { NAVBAR_HEIGHT } from '../Constants/Common/Dimensions.constants';
 import { useDashboard } from '../Contexts/DashboardContexts';
 import { corePalette } from '../Themes/colours';
+import CustomButton from './Common/Button';
 
 const NavBarWrapper = styled(AppBar)(() => ({
     position: 'sticky',
@@ -49,7 +48,7 @@ export default function NavBar() {
             </Box>
 
             <CustomButton
-                label="Summary"
+                label="Methylation Classifier"
                 variant="bold"
                 onClick={handleSummaryClick}
             />
