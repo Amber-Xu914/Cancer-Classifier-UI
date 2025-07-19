@@ -1,20 +1,16 @@
-import React, { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import zccTheme from './Themes/zccTheme';
-import NavBar from './Components/NavBar';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Dashboard from './Components/Dashboard';
+import MethylationClassifierProvider from './Components/MethylationClassifierProvider';
+import NavBar from './Components/NavBar';
 import PatientResults from './Components/PatientResults';
-import { DashboardContext } from './Contexts/DashboardContexts';
-import { DEFAULT_SUMMARY } from './Constants/Common/defaultSummaryText';
+import zccTheme from './Themes/zccTheme';
 
 function App() {
-    const [searchQuery, setSearchQuery] = useState<string>(DEFAULT_SUMMARY);
-
     return (
         <ThemeProvider theme={zccTheme}>
             <BrowserRouter>
-                <DashboardContext.Provider value={{ resetDashboard: () => setSearchQuery(DEFAULT_SUMMARY) }}>
+                <MethylationClassifierProvider>
                     <div className="flex flex-col h-screen">
                         <NavBar />
 
@@ -22,17 +18,17 @@ function App() {
                             <Routes>
                                 <Route
                                     path="/"
-                                    element={<Dashboard searchQuery={searchQuery} setSearchQuery={setSearchQuery} />}
+                                    element={<Navigate to="/dashboard" />}
                                 />
                                 <Route
                                     path="/dashboard"
-                                    element={<Dashboard searchQuery={searchQuery} setSearchQuery={setSearchQuery} />}
+                                    element={<Dashboard />}
                                 />
                                 <Route path="/PatientResults" element={<PatientResults />} />
                             </Routes>
                         </div>
                     </div>
-                </DashboardContext.Provider>
+                </MethylationClassifierProvider>
             </BrowserRouter>
         </ThemeProvider>
     );
