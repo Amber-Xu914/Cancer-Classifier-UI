@@ -111,16 +111,6 @@ const SunburstChart = ({ onClick, changeLevel }: SunBurstPlotProps) => {
         };
     }, [cancerTypeData, onClick]);
 
-    // Takes effect on every change of the input string changeLevel
-    useEffect(() => {
-        const plotDiv = plotRef.current as unknown as Plotly.PlotlyHTMLElement;
-        if (!plotDiv || !changeLevel) return;
-
-        // Update the level of the sunburst chart based on the selected cancer type
-        // Redraws the plot base on that
-        Plotly.react(plotDiv, data(changeLevel), layout);
-    }, [changeLevel]);
-
     return (
         <div ref={plotRef} />
     );
