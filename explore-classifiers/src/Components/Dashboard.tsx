@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/DashboardDefaults';
 import { useDashboard } from '../Contexts/DashboardContexts';
 import FilterSelect from './Common/FilterSelect';
-import SunBurstPlot from './SunBurstPlot';
+import SunburstChart from './SunBurstPlot';
 import Umap from './Umap';
 
 export default function Dashboard() {
@@ -35,6 +35,7 @@ export default function Dashboard() {
     };
 
     const handleSunburstClick = useCallback((value: string | null) => {
+        console.log('Sunburst clicked with value:', value);
         if (value) {
             setSearchQuery(`Showing results for: ${value}`);
             setCancerType(value);
@@ -51,10 +52,9 @@ export default function Dashboard() {
             <p style={{ marginTop: '40px', textAlign: 'center' }}>
                 {searchQuery}
             </p>
-
             <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
                 <div style={{ width: '50%' }}>
-                    <SunBurstPlot onClick={handleSunburstClick} />
+                    <SunburstChart onClick={handleSunburstClick} />
                 </div>
                 <div style={{ width: '50%' }}>
                     <Umap cancerType={cancerType} />
