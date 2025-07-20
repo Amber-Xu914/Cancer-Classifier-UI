@@ -47,7 +47,9 @@ export default function Dashboard() {
 
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-            <h1 style={{ marginBottom: '40px' }}>Methylation Classifier</h1>
+            <h1 style={{ marginBottom: '40px' }}>
+                Explore Paediatric Cancer Classifications Across Models and Visualizations.
+            </h1>
             <FilterSelect onSearch={handleSearch} />
             <p style={{ marginTop: '40px', textAlign: 'center' }}>
                 {searchQuery}

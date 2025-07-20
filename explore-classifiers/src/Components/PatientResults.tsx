@@ -3,6 +3,7 @@ import UmapThumbnail from "./UmapThumbnail";
 import { UmapCard } from "./UmapCard";
 import styles from "./PatientResults.module.css";
 import { useLocation } from "react-router-dom";
+import '../Global.css';
 
 export default function PatientResults() {
   const [selectedUMAP, setSelectedUMAP] = useState<number | null>(null);
@@ -10,6 +11,7 @@ export default function PatientResults() {
   const location = useLocation();
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [value, setValue] = useState('');
 
   useEffect(() => {
     // mock data
@@ -42,6 +44,10 @@ export default function PatientResults() {
 
     setResults(mockResults);
     setLoading(false);
+
+    const searchParams = new URLSearchParams(location.search);
+    const patientId = searchParams.get("value") || "unknown";
+    setValue(patientId);
 
     /*
     const searchParams = new URLSearchParams(location.search);
@@ -90,7 +96,7 @@ export default function PatientResults() {
     <div className={styles.container}>
       {/* sidebar */}
       <aside className={styles.sidebar}>
-        <h3>click preview to view each prediction's UMAP</h3>
+        <h3>Patient ID: {value}</h3>
         <div>
           {results.map((result, idx) => (
             <UmapThumbnail
@@ -108,6 +114,9 @@ export default function PatientResults() {
 
       {/* UMAP display */}
       <main className={styles.main}>
+        <h2 style={{ textAlign: "center" }}>
+          Click the preview on the left to view each prediction's UMAP
+        </h2>
         {results.map((result, idx) => (
           <div
             key={idx}

@@ -26,7 +26,7 @@ export function UmapCard({
 
   return (
     <div>
-      <h2>Prediction {layer}</h2>
+      <h3>Prediction {layer}</h3>
       <p><strong>Model Level:</strong> {modelName}</p>
       <p><strong>Prediction:</strong> {prediction}</p>
       <p><strong>Probability:</strong> {probability}</p>

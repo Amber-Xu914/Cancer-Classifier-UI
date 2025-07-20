@@ -5,6 +5,7 @@ import MethylationClassifierProvider from './Components/MethylationClassifierPro
 import NavBar from './Components/NavBar';
 import PatientResults from './Components/PatientResults';
 import zccTheme from './Themes/zccTheme';
+import './Global.css';
 
 function App() {
     return (
@@ -35,4 +36,3 @@ function App() {
 }
 
 export default App;
-
