@@ -21,10 +21,11 @@ const UmapThumbnail: React.FC<Props> = ({
       className={`thumbnail ${isSelected ? "selected" : ""}`}
     >
       <img src={src} alt={summary} className="thumbnail-img" />
-      <div className="tooltip">{summary}</div>
+      <div className="thumbnail-label">
+        <p>{summary}</p>
+      </div>
     </div>
   );
 };
 
 export default UmapThumbnail;
-

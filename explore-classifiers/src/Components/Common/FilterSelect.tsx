@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
 import { cancerTypeOptions } from '../../Constants/Common/cancerTypes';
 import { corePalette } from '../../Themes/colours';
+import { useNavigate } from 'react-router-dom';
 
 interface FilterSelectProps {
     onSearch: (filter: string, value: string | null) => void;
@@ -22,6 +23,7 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
     const [patientIds, setPatientIds] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
     // const [inputValue, setInputValue] = useState('');
 
     const handleChange = (event: SelectChangeEvent) => {
@@ -70,10 +72,12 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             case 'Patient':
                 if (value && value.trim() !== '' && patientIds.includes(value)) {
                     onSearch('Patient', value);
+                    navigate(`/PatientResults?filter=Patient&value=${encodeURIComponent(value)}`);
                 }
                 break;
             default:
                 onSearch(filter, value);
+                navigate(`/PatientResults?filter=${encodeURIComponent(filter)}&value=${encodeURIComponent(value)}`);
         }
     };
 
