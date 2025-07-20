@@ -6,6 +6,7 @@ import zccTheme from '../Themes/zccTheme';
 interface SunBurstPlotProps {
     onClick: (value: string | null) => void;
     changeLevel?: string;
+    selectedCancerType: string;
 }
 
 interface CancerTypeData {
@@ -18,29 +19,28 @@ type CancerTypeDataArray = CancerTypeData[];
 
 const Plotly = require('plotly.js-dist') as typeof import('plotly.js');
 
-const SunburstChart = ({ onClick, changeLevel }: SunBurstPlotProps) => {
+const SunburstChart = ({ onClick, changeLevel, selectedCancerType }: SunBurstPlotProps) => {
     const [cancerTypeData, setCancerTypeData] = useState<CancerTypeDataArray>([]);
     const plotRef = useRef<HTMLDivElement>(null);
     const clickDataRef = useRef<any>(null);
 
-    // Fetch cancer type data from the server
+
     useEffect(() => {
-        fetch('/cancer/cancer_structure')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-                const root = { parent: '', child: 'ZERO2', count: 1 };
-                setCancerTypeData([root, ...data.cancer_types]);
-                // setCancerTypeData(data.cancer_types)
-            })
-            .catch((error) => {
-                console.error('Error fetching cancer type data: ', error);
-            });
-    }, []);
+        fetch(`/cancer/cancer_structure?type=${selectedCancerType}`)
+          .then((response) => {
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+            return response.json();
+          })
+          .then((data) => {
+            const root = { parent: '', child: 'ZERO2', count: 1 };
+            setCancerTypeData([root, ...data.cancer_types]);
+            setCancerTypeData(data.cancer_types)
+          })
+          .catch((error) => {
+            console.error('Error fetching cancer type data: ', error);
+          });
+      }, [selectedCancerType]); 
+      
 
     // Adjusts level of the data based on the input string
     const data = (changeLevel: string): Partial<Plotly.SunburstData>[] => {
@@ -86,7 +86,7 @@ const SunburstChart = ({ onClick, changeLevel }: SunBurstPlotProps) => {
         if (!plotRef.current) return;
         const plotDiv = plotRef.current as unknown as Plotly.PlotlyHTMLElement;
 
-        Plotly.newPlot(plotDiv, data(DEFAULT_CANCER_TYPE), layout)
+        Plotly.newPlot(plotDiv, data(selectedCancerType), layout)
             .then(() => {
                 // Add event listeners for click events
                 // Updating of cancerType through onClick happens in the afterAnimation callback
@@ -109,7 +109,7 @@ const SunburstChart = ({ onClick, changeLevel }: SunBurstPlotProps) => {
             plotDiv.removeAllListeners?.('plotly_click');
             plotDiv.removeAllListeners?.('plotly_animated');
         };
-    }, [cancerTypeData, onClick]);
+    }, [cancerTypeData, onClick, selectedCancerType]);
 
     return (
         <div ref={plotRef} />
