@@ -49,3 +49,9 @@
 .thumbnail:hover .tooltip {
   opacity: 1;
 }
+
+.thumbnail-label {
+  font-size: 12px;
+  text-align: center;
+  padding: 4px;
+}

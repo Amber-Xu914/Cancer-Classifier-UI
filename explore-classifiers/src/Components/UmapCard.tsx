@@ -1,22 +1,43 @@
-interface Props {
+import TestingUmapPlot from "./TestingUmapPlot";
+
+interface UmapCardProps {
   layer: number;
   selected: boolean;
+  modelName: string;
+  prediction: string;
+  probability: number;
+  figureJSON: string | object;
 }
 
-export const UmapCard: React.FC<Props> = ({ layer, selected }) => {
+export function UmapCard({
+  layer,
+  selected,
+  modelName,
+  prediction,
+  probability,
+  figureJSON,
+}: UmapCardProps) {
+  let parsedFigure: any = null;
+  try {
+    parsedFigure = typeof figureJSON === "string" ? JSON.parse(figureJSON) : figureJSON;
+  } catch (err) {
+    console.error("Invalid figure JSON:", err);
+  }
+
   return (
     <div>
-      <h2>UMAP Layer {layer}</h2>
-      {selected ? (
-        <div>
-          {/* Replace with real chart */}
-          <p>UMAP description place holder</p>
-          <p>[UMAP visualization place holder for layer {layer}]</p>
-        </div>
-      ) : (
-        <p>Click UMAP {layer} to view this layer.</p>
+      <h2>Prediction {layer}</h2>
+      <p><strong>Model Level:</strong> {modelName}</p>
+      <p><strong>Prediction:</strong> {prediction}</p>
+      <p><strong>Probability:</strong> {probability}</p>
+
+      {selected && parsedFigure && (
+        <TestingUmapPlot figure={parsedFigure} />
+      )}
+
+      {selected && !parsedFigure && (
+        <p style={{ color: 'red' }}>!ERROR</p>
       )}
     </div>
   );
-};
-
+}
