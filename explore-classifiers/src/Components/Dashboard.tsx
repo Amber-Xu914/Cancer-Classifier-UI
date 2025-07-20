@@ -5,12 +5,14 @@ import { useDashboard } from '../Contexts/DashboardContexts';
 import FilterSelect from './Common/FilterSelect';
 import SunburstChart from './SunBurstPlot';
 import Umap from './Umap';
+import { useTheme, Typography } from '@mui/material';
 
 export default function Dashboard() {
     const navigate = useNavigate();
     const { resetDashboard } = useDashboard();
     const location = useLocation();
     const { searchQuery, setSearchQuery, cancerType, setCancerType } = useDashboard();
+    const theme = useTheme();
 
     useEffect(() => {
         if (location.pathname === '/dashboard' || location.pathname === '/') {
@@ -46,12 +48,14 @@ export default function Dashboard() {
     }, [setSearchQuery, setCancerType]);
 
     return (
-        <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-            <h1 style={{ marginBottom: '40px' }}>Methylation Classifier</h1>
+        <div style={{ padding: '20px', fontFamily: theme.typography.fontFamily, color: theme.palette.text.primary }}>
+            <Typography variant="h1" style={{ marginBottom: '40px' }}>
+                Methylation Classifier
+            </Typography>
             <FilterSelect onSearch={handleSearch} />
-            <p style={{ marginTop: '40px', textAlign: 'center' }}>
+            <Typography variant="bodyRegular" style={{ marginTop: '40px', textAlign: 'center' }}>
                 {searchQuery}
-            </p>
+            </Typography>
             <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
                 <div style={{ width: '50%' }}>
                     <SunburstChart onClick={handleSunburstClick} />
