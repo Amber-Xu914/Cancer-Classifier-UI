@@ -24,24 +24,7 @@ const SunburstChart = ({ onClick, changeLevel, selectedCancerType }: SunBurstPlo
     const plotRef = useRef<HTMLDivElement>(null);
     const clickDataRef = useRef<any>(null);
 
-    // Fetch cancer type data from the server
-    // useEffect(() => {
-    //     fetch('/cancer/cancer_structure')
-    //         .then((response) => {
-    //             if (!response.ok) {
-    //                 throw new Error(`HTTP error! Status: ${response.status}`);
-    //             }
-    //             return response.json();
-    //         })
-    //         .then((data) => {
-    //             const root = { parent: '', child: 'ZERO2', count: 1 };
-    //             setCancerTypeData([root, ...data.cancer_types]);
-    //             // setCancerTypeData(data.cancer_types)
-    //         })
-    //         .catch((error) => {
-    //             console.error('Error fetching cancer type data: ', error);
-    //         });
-    // }, []);
+
     useEffect(() => {
         fetch(`/cancer/cancer_structure?type=${selectedCancerType}`)
           .then((response) => {
@@ -134,4 +117,3 @@ const SunburstChart = ({ onClick, changeLevel, selectedCancerType }: SunBurstPlo
 };
 
 export default React.memo(SunburstChart);
-
