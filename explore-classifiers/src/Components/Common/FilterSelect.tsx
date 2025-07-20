@@ -72,7 +72,7 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             case 'Patient':
                 if (value && value.trim() !== '' && patientIds.includes(value)) {
                     onSearch('Patient', value);
-                    navigate(`/PatientResults?filter=Patient&value=${encodeURIComponent(value)}`); // 跳转
+                    navigate(`/PatientResults?filter=Patient&value=${encodeURIComponent(value)}`);
                 }
                 break;
             default:
