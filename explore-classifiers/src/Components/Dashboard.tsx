@@ -1,3 +1,5 @@
+import Typography from '@mui/material/Typography';
+import { useTheme } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/DashboardDefaults';
@@ -11,6 +13,7 @@ export default function Dashboard() {
     const { resetDashboard } = useDashboard();
     const location = useLocation();
     const { searchQuery, setSearchQuery, cancerType, setCancerType } = useDashboard();
+    const theme = useTheme();
 
     useEffect(() => {
         if (location.pathname === '/dashboard' || location.pathname === '/') {
@@ -46,19 +49,36 @@ export default function Dashboard() {
     }, [setSearchQuery, setCancerType]);
 
     return (
-        <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-            <h1 style={{ marginBottom: '40px' }}>
+        <div style={{ padding: '20px', fontFamily: theme.typography.fontFamily }}>
+            <Typography
+                variant="h1"
+                sx={{
+                    marginBottom: '40px',
+                    color: theme.typography.h1.color,
+                    fontFamily: theme.typography.fontFamily,
+                }}
+            >
                 Explore Paediatric Cancer Classifications Across Models and Visualizations.
-            </h1>
+            </Typography>
             <FilterSelect onSearch={handleSearch} />
-            <p style={{ marginTop: '40px', textAlign: 'center' }}>
+            <Typography
+                variant="bodyRegular"
+                sx={{
+                    marginTop: '40px',
+                    textAlign: 'center',
+                    color: theme.typography.bodyRegular.color,
+                    fontFamily: theme.typography.fontFamily,
+                    width: '100%',
+                    display: 'block',
+                }}
+            >
                 {searchQuery}
-            </p>
+            </Typography>
             <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
                 <div style={{ width: '50%' }}>
                     <SunburstChart
-                    onClick={handleSunburstClick} 
-                    selectedCancerType={cancerType}
+                        onClick={handleSunburstClick}
+                        selectedCancerType={cancerType}
                     />
                 </div>
                 <div style={{ width: '50%' }}>

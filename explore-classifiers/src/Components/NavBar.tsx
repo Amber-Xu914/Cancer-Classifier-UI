@@ -1,4 +1,4 @@
-import { AppBar, Box, styled } from '@mui/material';
+import { AppBar, Box, styled, Typography, useTheme } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { NAVBAR_HEIGHT } from '../Constants/Common/Dimensions.constants';
 import { useDashboard } from '../Contexts/DashboardContexts';
@@ -22,6 +22,7 @@ export default function NavBar() {
     const { resetDashboard } = useDashboard();
     const location = useLocation();
     const navigate = useNavigate();
+    const theme = useTheme();
 
     const handleSummaryClick = () => {
         resetDashboard();
@@ -42,9 +43,16 @@ export default function NavBar() {
                         marginRight: '16px',
                     }}
                 />
-                <span style={{ color: 'black', fontWeight: 'bold' }}>
+                <Typography
+                    variant="titleRegular"
+                    sx={{
+                        color: theme.typography.titleRegular.color,
+                        fontFamily: theme.typography.fontFamily,
+                        fontWeight: theme.typography.fontWeightBold,
+                    }}
+                >
                     Methylation Classification
-                </span>
+                </Typography>
             </Box>
 
             <CustomButton
