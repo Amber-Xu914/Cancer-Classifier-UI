@@ -3,10 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/DashboardDefaults';
 import { useDashboard } from '../Contexts/DashboardContexts';
 import { CancerTypeData, getCancerHireachy } from '../Service/getCancerHireachyData';
+import LoadingAnimation from './Animations/LoadingAnimation';
 import FilterSelect from './Common/FilterSelect';
 import SunburstChart from './SunBurstPlot';
 import Umap from './Umap';
-import LoadingAnimation from './Animations/LoadingAnimation';
 
 export default function Dashboard() {
     const navigate = useNavigate();

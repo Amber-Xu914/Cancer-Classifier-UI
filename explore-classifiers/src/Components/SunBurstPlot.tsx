@@ -1,12 +1,11 @@
-import { PlotlyHTMLElement } from 'plotly.js';
-import React, { useState } from 'react';
-import Plot from 'react-plotly.js';
+import { PlotlyHTMLElement, SunburstClickEvent } from 'plotly.js';
+import React, { useEffect, useRef, useState } from 'react';
 import { CancerTypeData } from '../Service/getCancerHireachyData';
 import { corePalette } from '../Themes/colours';
 import zccTheme from '../Themes/zccTheme';
 import { useSunburstData } from './Hooks/useSunburstData';
-import { useSunburstInteraction } from './Hooks/useSunburstInteraction';
 import { AnimatePresence } from 'framer-motion';
+import Plot from 'react-plotly.js'
 
 type SunburstChartProps = {
     data: CancerTypeData[],
@@ -14,11 +13,11 @@ type SunburstChartProps = {
     onClick: (value: string | null) => void,
 }
 
+const Plotly = require('plotly.js-dist') as typeof import('plotly.js');
+
 const SunburstChart = (
     { data, level, onClick }: SunburstChartProps
 ) => {
-    const [PlotlyElement, setPlotlyElement] = useState<PlotlyHTMLElement | null>(null);
-
     const plotData = useSunburstData(data, level);
 
     const layout: Partial<Plotly.Layout> = {
@@ -38,15 +37,17 @@ const SunburstChart = (
         font: zccTheme.typography.label,
     };
 
-    useSunburstInteraction(PlotlyElement, onClick);
+    const handleClick = (data: SunburstClickEvent) => {
+        const { nextLevel } = data;
+        onClick(nextLevel);
+    }
 
     return (
         <AnimatePresence mode="wait">
             <Plot
                 data={plotData}
                 layout={layout}
-                onInitialized={(_: any, graphDiv: PlotlyHTMLElement) => setPlotlyElement(graphDiv)}
-                onUpdate={(_: any, graphDiv: PlotlyHTMLElement) => setPlotlyElement(graphDiv)}
+                onSunburstClick={handleClick}
             />
         </AnimatePresence>
     );
