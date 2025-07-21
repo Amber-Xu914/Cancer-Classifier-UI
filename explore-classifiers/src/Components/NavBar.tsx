@@ -43,12 +43,12 @@ export default function NavBar() {
                     }}
                 />
                 <span style={{ color: 'black', fontWeight: 'bold' }}>
-                    Paediatric Cancer Classification
+                    Methylation Classification
                 </span>
             </Box>
 
             <CustomButton
-                label="Methylation Classifier"
+                label="Home"
                 variant="bold"
                 onClick={handleSummaryClick}
             />
