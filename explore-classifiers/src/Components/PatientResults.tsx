@@ -3,7 +3,9 @@ import UmapThumbnail from "./UmapThumbnail";
 import { UmapCard } from "./UmapCard";
 import styles from "./PatientResults.module.css";
 import { useLocation } from "react-router-dom";
+import { TextField } from "@mui/material";
 import '../Global.css';
+
 
 // pending floating box for summary
 export default function PatientResults() {
@@ -81,6 +83,32 @@ export default function PatientResults() {
       {/* sidebar */}
       <aside className={styles.sidebar}>
         <h3>Patient ID: {value}</h3>
+        {/* MUI Filter */}
+        <TextField
+          placeholder="Min Probability"
+          variant="outlined"
+          size="small"
+          fullWidth
+          type="number"
+          onChange={(e) => {
+            const threshold = parseFloat(e.target.value);
+            if (!isNaN(threshold)) {
+              setSelectedUMAPs(() => {
+                const newSet = new Set<number>();
+                results.forEach((result, idx) => {
+                  if (result.probability > threshold) {
+                    newSet.add(idx);
+                  }
+                });
+                return newSet;
+              });
+            }
+          }}
+          style={{ marginBottom: "16px" }}
+          InputProps={{
+            style: { fontSize: "0.75rem" },
+          }}
+        />
         <div>
           {results.map((result, idx) => (
             <UmapThumbnail
