@@ -74,7 +74,7 @@ export default function PatientResults() {
 
   // handle no results
   if (results.length === 0) {
-    return <div style={{ padding: "2rem" }}>no results...?</div>;
+    return <div style={{ padding: "2rem" }}>No summary of this cancer type available.</div>;
   }
 
   // Display data
