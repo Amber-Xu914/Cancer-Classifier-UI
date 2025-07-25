@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import LoadingAnimation from './Animations/LoadingAnimation';
+import { Scatter3dData } from 'plotly.js';
+import { buildUmapData } from '../Helpers/buildUmapData';
 
 interface UmapProps {
     cancerType: string;
@@ -27,11 +29,19 @@ const Umap = ({ cancerType }: UmapProps) => {
             })
     }, [cancerType]);
 
+    const data: Partial<Scatter3dData>[] = buildUmapData(umap.data);
+
     return umap ? (
         <Plot
-            data={umap.data}
-            layout={umap.layout}
-            style={{ width: '100%' }}
+            data={data}
+            layout={{
+                ...umap.layout,
+                width: undefined,
+                height: undefined,
+                autosize: true,
+            }}
+            useResizeHandler
+            style={{ width: '100%', height: '500px' }}
         />
     ) : (
         <LoadingAnimation />

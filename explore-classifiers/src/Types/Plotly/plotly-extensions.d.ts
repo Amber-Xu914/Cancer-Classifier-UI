@@ -23,6 +23,10 @@ declare namespace Plotly {
         level?: string;
     }
 
+    interface Scatter3dData extends PlotData {
+        type: 'scatter3d'
+    }
+
     interface Layout {
         sunburstcolorway?: string[];
         extendsunburstcolorway: boolean;

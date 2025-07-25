@@ -48,6 +48,7 @@ export default function FilterSelect({ onSearch, data }: FilterSelectProps) {
             })
             .then((data) => {
                 setPatientIds(data.sample_list);
+                console.log(data.sample_list);
             })
             .catch((error) => {
                 console.error('Error fetching patient IDs: ', error);
