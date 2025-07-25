@@ -1,28 +1,32 @@
 import {
+    Autocomplete,
     Box,
     MenuItem,
     Select,
     SelectChangeEvent,
     TextField,
-    Autocomplete,
 } from '@mui/material';
-import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
-import { cancerTypeOptions } from '../../Constants/Common/cancerTypes';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { CancerTypeOptions, mapCancerToLevel } from '../../Helpers/mapCancerToLevel';
+import { CancerTypeData } from '../../Service/getCancerHireachyData';
 import { corePalette } from '../../Themes/colours';
 
 interface FilterSelectProps {
     onSearch: (filter: string, value: string | null) => void;
+    data: CancerTypeData[];
 }
 
-export default function FilterSelect({ onSearch }: FilterSelectProps) {
+export default function FilterSelect({ onSearch, data }: FilterSelectProps) {
     const [filter, setFilter] = useState('Patient');
     const [searchValue, setSearchValue] = useState('');
     const [comboValue, setComboValue] = useState<{ level: string, cancer: string } | null>(null);
     const [patientIds, setPatientIds] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
-    // const [inputValue, setInputValue] = useState('');
+    const navigate = useNavigate();
+    const cancerTypeOptions: CancerTypeOptions[] = mapCancerToLevel(data);
 
     const handleChange = (event: SelectChangeEvent) => {
         setFilter(event.target.value);
@@ -70,10 +74,12 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
             case 'Patient':
                 if (value && value.trim() !== '' && patientIds.includes(value)) {
                     onSearch('Patient', value);
+                    navigate(`/PatientResults?filter=Patient&value=${encodeURIComponent(value)}`);
                 }
                 break;
             default:
                 onSearch(filter, value);
+                navigate(`/PatientResults?filter=${encodeURIComponent(filter)}&value=${encodeURIComponent(value)}`);
         }
     };
 
@@ -112,11 +118,11 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 autoHighlight
                 autoSelect
                 options={filter === 'Patient' ? patientIds : cancerTypeOptions}
-                
+
                 getOptionLabel={(option) =>
                     filter === 'Patient'
-                    ? option as string
-                    : (option as { cancer: string })?.cancer ?? ''
+                        ? option as string
+                        : (option as { cancer: string })?.cancer ?? ''
                 }
                 groupBy={filter === 'Cancer Type'
                     ? (option) => (option as { cancer: string, level: string })?.level ?? ''
@@ -125,18 +131,18 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                 value={filter === 'Cancer Type' ? comboValue ?? null : null}
                 onChange={(event, newValue) => {
                     if (filter === 'Cancer Type') {
-                    setComboValue((newValue as any) ?? null);
+                        setComboValue((newValue as any) ?? null);
                     } else {
-                    setSearchValue(newValue as string ?? '');
+                        setSearchValue(newValue as string ?? '');
                     }
                 }}
                 loading={loading}
                 popupIcon={null}
                 componentsProps={{
                     popupIndicator: {
-                    sx: {
-                        display: 'none',
-                    },
+                        sx: {
+                            display: 'none',
+                        },
                     },
                 }}
                 filterOptions={(options, state) => {
@@ -145,7 +151,7 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                     // Patient filter: string[]
                     if (filter === 'Patient') {
                         return (options as string[]).filter((option) =>
-                        option.toLowerCase().includes(input)
+                            option.toLowerCase().includes(input)
                         );
                     }
 
@@ -153,81 +159,81 @@ export default function FilterSelect({ onSearch }: FilterSelectProps) {
                     return (options as { cancer: string; level: string }[]).filter((option) =>
                         option.cancer.toLowerCase().includes(input)
                     );
-                    }}
+                }}
                 noOptionsText="No results"
                 sx={{ width: 500 }}
                 renderInput={(params) => (
                     <TextField
-                    {...params}
-                    placeholder={
-                        filter === 'Cancer Type' ? 'Search Cancer Type' : 'Search Patient ID'
-                    }
-                    variant="outlined"
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleSearch();
-                    }}
-                    InputProps={{
-                        ...params.InputProps,
-                        endAdornment: (
-                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            {params.InputProps.endAdornment}
-                            <Box
-                                sx={{
-                                ml: 1,
+                        {...params}
+                        placeholder={
+                            filter === 'Cancer Type' ? 'Search Cancer Type' : 'Search Patient ID'
+                        }
+                        variant="outlined"
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSearch();
+                        }}
+                        InputProps={{
+                            ...params.InputProps,
+                            endAdornment: (
+                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                    {params.InputProps.endAdornment}
+                                    <Box
+                                        sx={{
+                                            ml: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            cursor: 'pointer',
+                                            color: corePalette.green150,
+                                        }}
+                                        onClick={() => {
+                                            setOpen(false);
+                                            if (filter === 'Cancer Type') {
+                                                if (comboValue) handleSearch();
+                                            } else {
+                                                if (searchValue) handleSearch();
+                                            }
+                                        }}
+                                    >
+                                        <Search size={18} />
+                                    </Box>
+                                </Box>
+                            ),
+                        }}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                height: '40px',
+                                padding: 0,
+                                alignItems: 'center',
+                            },
+                            '& .MuiInputBase-input': {
+                                padding: '0 16px',
+                                lineHeight: '40px',
+                                height: '40px',
+                                boxSizing: 'border-box',
                                 display: 'flex',
                                 alignItems: 'center',
-                                cursor: 'pointer',
-                                color: corePalette.green150,
-                                }}
-                                onClick={() => {
-                                    setOpen(false);
-                                    if (filter === 'Cancer Type') {
-                                        if (comboValue) handleSearch();
-                                    } else {
-                                        if (searchValue) handleSearch();
-                                    }
-                                }}
-                            >
-                                <Search size={18} />
-                            </Box>
-                        </Box>
-                        ),
-                    }}
-                    sx={{
-                        '& .MuiOutlinedInput-root': {
-                        height: '40px',
-                        padding: 0,
-                        alignItems: 'center',
-                        },
-                        '& .MuiInputBase-input': {
-                        padding: '0 16px',
-                        lineHeight: '40px',
-                        height: '40px',
-                        boxSizing: 'border-box',
-                        display: 'flex',
-                        alignItems: 'center',
-                        },
-                        '& .MuiInputLabel-root': {
-                        top: '-6px',
-                        },
-                    }}
+                            },
+                            '& .MuiInputLabel-root': {
+                                top: '-6px',
+                            },
+                        }}
                     />
                 )}
                 slotProps={{
                     paper: {
-                    sx: {
-                        textAlign: 'left',
-                    },
+                        sx: {
+                            textAlign: 'left',
+                        },
                     },
                     popper: {
-                    modifiers: [
-                        {
-                        name: 'offset',
-                        options: {
-                            offset: [0, 4],
-                        },
-                        },
-                    ],
+                        modifiers: [
+                            {
+                                name: 'offset',
+                                options: {
+                                    offset: [0, 4],
+                                },
+                            },
+                        ],
                     },
                 }}
             />

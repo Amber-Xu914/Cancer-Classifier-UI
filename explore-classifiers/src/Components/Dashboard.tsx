@@ -1,7 +1,10 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/DashboardDefaults';
 import { useDashboard } from '../Contexts/DashboardContexts';
+import { mapCancerToLevel } from '../Helpers/mapCancerToLevel';
+import { CancerTypeData, getCancerHireachy } from '../Service/getCancerHireachyData';
+import LoadingAnimation from './Animations/LoadingAnimation';
 import FilterSelect from './Common/FilterSelect';
 import SunburstChart from './SunBurstPlot';
 import Umap from './Umap';
@@ -11,6 +14,17 @@ export default function Dashboard() {
     const { resetDashboard } = useDashboard();
     const location = useLocation();
     const { searchQuery, setSearchQuery, cancerType, setCancerType } = useDashboard();
+    const [cancerHireachyData, setCancerHireachyData] = useState<CancerTypeData[]>([]);
+
+    useEffect(() => {
+        getCancerHireachy()
+            .then((data) => {
+                setCancerHireachyData(data);
+                const test = mapCancerToLevel(data);
+                console.log(test);
+            })
+            .catch(err => console.error(err));
+    }, []);
 
     useEffect(() => {
         if (location.pathname === '/dashboard' || location.pathname === '/') {
@@ -47,14 +61,23 @@ export default function Dashboard() {
 
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-            <h1 style={{ marginBottom: '40px' }}>Methylation Classifier</h1>
-            <FilterSelect onSearch={handleSearch} />
+            <h1 style={{ marginBottom: '40px' }}>
+                Explore Paediatric Cancer Classifications Across Models and Visualizations.
+            </h1>
+            <FilterSelect
+                onSearch={handleSearch}
+                data={cancerHireachyData}
+            />
             <p style={{ marginTop: '40px', textAlign: 'center' }}>
                 {searchQuery}
             </p>
             <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
                 <div style={{ width: '50%' }}>
-                    <SunburstChart onClick={handleSunburstClick} />
+                    {cancerHireachyData.length > 0 ? (<SunburstChart
+                        data={cancerHireachyData}
+                        onClick={handleSunburstClick}
+                        level={cancerType}
+                    />) : (<LoadingAnimation />)}
                 </div>
                 <div style={{ width: '50%' }}>
                     <Umap cancerType={cancerType} />
