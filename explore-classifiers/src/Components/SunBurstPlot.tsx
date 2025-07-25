@@ -49,11 +49,19 @@ const SunburstChart = (
 
     return (
         <AnimatePresence mode="wait">
-            <Plot
-                data={plotData}
-                layout={layout}
-                onSunburstClick={handleClick}
-            />
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4 }}
+            >
+                <Plot
+                    data={plotData}
+                    layout={layout}
+                    onInitialized={handleInitialized}
+                    useResizeHandler
+                    style={{ width: '100%', height: '500px' }}
+                />
+            </motion.div>
         </AnimatePresence>
     );
 };

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/DashboardDefaults';
 import { useDashboard } from '../Contexts/DashboardContexts';
-import { mapCancerToLevel } from '../Helpers/mapCancerToLevel';
 import { CancerTypeData, getCancerHireachy } from '../Service/getCancerHireachyData';
 import LoadingAnimation from './Animations/LoadingAnimation';
 import FilterSelect from './Common/FilterSelect';
@@ -20,8 +19,6 @@ export default function Dashboard() {
         getCancerHireachy()
             .then((data) => {
                 setCancerHireachyData(data);
-                const test = mapCancerToLevel(data);
-                console.log(test);
             })
             .catch(err => console.error(err));
     }, []);
@@ -60,7 +57,7 @@ export default function Dashboard() {
     }, [setSearchQuery, setCancerType]);
 
     return (
-        <div style={{ padding: '20px', fontFamily: 'Arial' }}>
+        <div style={{ padding: '20px' }}>
             <h1 style={{ marginBottom: '40px' }}>
                 Explore Paediatric Cancer Classifications Across Models and Visualizations.
             </h1>
@@ -73,11 +70,15 @@ export default function Dashboard() {
             </p>
             <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
                 <div style={{ width: '50%' }}>
-                    {cancerHireachyData.length > 0 ? (<SunburstChart
-                        data={cancerHireachyData}
-                        onClick={handleSunburstClick}
-                        level={cancerType}
-                    />) : (<LoadingAnimation />)}
+                    {cancerHireachyData.length > 0 ? (
+                        <SunburstChart
+                            data={cancerHireachyData}
+                            onClick={handleSunburstClick}
+                            level={cancerType}
+                        />
+                    ) : (
+                        <LoadingAnimation />
+                    )}
                 </div>
                 <div style={{ width: '50%' }}>
                     <Umap cancerType={cancerType} />

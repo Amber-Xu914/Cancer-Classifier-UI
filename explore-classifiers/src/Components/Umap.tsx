@@ -29,7 +29,7 @@ const Umap = ({ cancerType }: UmapProps) => {
             })
     }, [cancerType]);
 
-    const data: Partial<Scatter3dData>[] = buildUmapData(umap.data);
+    const data: Partial<Scatter3dData>[] | undefined = umap ? buildUmapData(umap.data) : undefined;
 
     return umap ? (
         <Plot
