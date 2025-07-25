@@ -107,6 +107,11 @@ export default function PatientResults() {
           style={{ marginBottom: "16px" }}
           InputProps={{
             style: { fontSize: "0.75rem" },
+            inputProps: {
+              step: 0.01, // change unit to 0.01
+              min: 0,
+              max: 1,
+            },
           }}
         />
         <div>
