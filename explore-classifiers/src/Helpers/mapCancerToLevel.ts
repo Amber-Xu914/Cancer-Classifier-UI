@@ -9,7 +9,7 @@ export type CancerTypeOptions = {
 export const mapCancerToLevel = (data: CancerTypeData[]): CancerTypeOptions[] => {
     const cancerDataMap = createCancerDataMap(data);
 
-    const roots: CancerTypeData[] = data.filter(data => data.parent == DEFAULT_CANCER_TYPE);
+    const roots: CancerTypeData[] = data.filter(data => data.parent === DEFAULT_CANCER_TYPE);
     const queue: { node: CancerTypeData, level: number }[] = roots.map(root => ({ node: root, level: 0 }));
 
     const cancerTypeOptions: CancerTypeOptions[] = [];

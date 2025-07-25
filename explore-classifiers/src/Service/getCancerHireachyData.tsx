@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 
 export type CancerTypeData = {
     parent: string;

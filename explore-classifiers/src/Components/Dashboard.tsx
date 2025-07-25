@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/DashboardDefaults';
 import { useDashboard } from '../Contexts/DashboardContexts';
+import { mapCancerToLevel } from '../Helpers/mapCancerToLevel';
 import { CancerTypeData, getCancerHireachy } from '../Service/getCancerHireachyData';
 import LoadingAnimation from './Animations/LoadingAnimation';
 import FilterSelect from './Common/FilterSelect';
 import SunburstChart from './SunBurstPlot';
 import Umap from './Umap';
-import { CancerTypeOptions, mapCancerToLevel } from '../Helpers/mapCancerToLevel';
 
 export default function Dashboard() {
     const navigate = useNavigate();
