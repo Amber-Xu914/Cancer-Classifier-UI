@@ -61,9 +61,9 @@ export default function PatientResults() {
         setTimeout(() => {
           cardRefs.current[id]?.scrollIntoView({
             behavior: "smooth",
-            block: "start",
+            block: "center",
           });
-        }, 0);
+        }, 200);
       }
 
       return newSet;
