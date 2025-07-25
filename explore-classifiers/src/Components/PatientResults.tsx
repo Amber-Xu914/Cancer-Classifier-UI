@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import '../Global.css';
 
 export default function PatientResults() {
-  const [selectedUMAP, setSelectedUMAP] = useState<number | null>(null);
+  const [selectedUMAPs, setSelectedUMAPs] = useState<Set<number>>(new Set());
   const cardRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const location = useLocation();
   const [results, setResults] = useState<any[]>([]);
@@ -72,15 +72,26 @@ export default function PatientResults() {
   }, [location]);
 
   const handleThumbnailClick = (id: number) => {
-    setSelectedUMAP((prev) => {
-      const newSelection = prev === id ? null : id;
-      if (newSelection !== null && cardRefs.current[newSelection]) {
-        cardRefs.current[newSelection]?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
+    setSelectedUMAPs((prev) => {
+      const newSet = new Set(prev);
+      const isNewlyAdded = !newSet.has(id);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
       }
-      return newSelection;
+
+      if (isNewlyAdded) {
+        // wait till the UMAP to come out a bit
+        setTimeout(() => {
+          cardRefs.current[id]?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }, 0);
+      }
+
+      return newSet;
     });
   };
 
@@ -105,7 +116,7 @@ export default function PatientResults() {
               // TODO: change to dynamic UMAP pic
               src="/logo192.png"
               summary={`${result.model_name}: ${result.prediction}`}
-              isSelected={selectedUMAP === idx}
+              isSelected={selectedUMAPs.has(idx)}
               onClick={() => handleThumbnailClick(idx)}
             />
           ))}
@@ -125,7 +136,7 @@ export default function PatientResults() {
           >
             <UmapCard
               layer={idx + 1}
-              selected={selectedUMAP === idx}
+              selected={selectedUMAPs.has(idx)}
               modelName={result.model_name}
               prediction={result.prediction}
               probability={result.probability}
