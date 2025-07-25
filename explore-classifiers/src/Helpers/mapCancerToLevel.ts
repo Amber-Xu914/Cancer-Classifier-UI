@@ -9,7 +9,8 @@ export type CancerTypeOptions = {
 export const mapCancerToLevel = (data: CancerTypeData[]): CancerTypeOptions[] => {
     const cancerDataMap = createCancerDataMap(data);
 
-    const roots: CancerTypeData[] = data.filter(data => data.parent == DEFAULT_CANCER_TYPE);
+    const roots: CancerTypeData[] =
+        data.filter(data => data.parent === DEFAULT_CANCER_TYPE);
     const queue: { node: CancerTypeData, level: number }[] = roots.map(root => ({ node: root, level: 0 }));
 
     const cancerTypeOptions: CancerTypeOptions[] = [];
@@ -22,13 +23,15 @@ export const mapCancerToLevel = (data: CancerTypeData[]): CancerTypeOptions[] =>
             cancer: node.child
         });
 
-        const children: CancerTypeData[] = cancerDataMap.get(node.child) || [];
+        const children: CancerTypeData[] =
+            cancerDataMap.get(node.child) || [];
+
         children.forEach(child => {
             queue.push({ node: child, level: level + 1 });
         });
     }
 
-    return cancerTypeOptions;
+    return cancerTypeOptions.sort(sortLevel);
 };
 
 const createCancerDataMap = (data: CancerTypeData[]): Map<string, CancerTypeData[]> => {
@@ -43,3 +46,12 @@ const createCancerDataMap = (data: CancerTypeData[]): Map<string, CancerTypeData
 
     return cancerDataMap;
 };
+
+const sortLevel = (a: CancerTypeOptions, b: CancerTypeOptions) => {
+    const levelComparison = a.level.localeCompare(b.level);
+    if (levelComparison !== 0) {
+        return levelComparison;
+    }
+
+    return a.cancer.localeCompare(b.cancer);
+}

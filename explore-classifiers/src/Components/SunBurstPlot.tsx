@@ -1,11 +1,11 @@
-import { PlotlyHTMLElement, SunburstClickEvent } from 'plotly.js';
-import React, { useEffect, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { SunburstClickEvent } from 'plotly.js';
+import React from 'react';
+import Plot from 'react-plotly.js';
 import { CancerTypeData } from '../Service/getCancerHireachyData';
 import { corePalette } from '../Themes/colours';
 import zccTheme from '../Themes/zccTheme';
 import { useSunburstData } from './Hooks/useSunburstData';
-import { AnimatePresence, motion } from 'framer-motion';
-import Plot from 'react-plotly.js'
 
 type SunburstChartProps = {
     data: CancerTypeData[],
