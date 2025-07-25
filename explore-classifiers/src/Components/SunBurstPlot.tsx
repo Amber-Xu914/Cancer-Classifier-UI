@@ -4,7 +4,7 @@ import { CancerTypeData } from '../Service/getCancerHireachyData';
 import { corePalette } from '../Themes/colours';
 import zccTheme from '../Themes/zccTheme';
 import { useSunburstData } from './Hooks/useSunburstData';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Plot from 'react-plotly.js'
 
 type SunburstChartProps = {
@@ -44,11 +44,17 @@ const SunburstChart = (
 
     return (
         <AnimatePresence mode="wait">
-            <Plot
-                data={plotData}
-                layout={layout}
-                onSunburstClick={handleClick}
-            />
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4 }}
+            >
+                <Plot
+                    data={plotData}
+                    layout={layout}
+                    onSunburstClick={handleClick}
+                />
+            </motion.div>
         </AnimatePresence>
     );
 };
