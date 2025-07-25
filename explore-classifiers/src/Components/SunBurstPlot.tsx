@@ -21,9 +21,7 @@ const Plotly = require('plotly.js-dist') as typeof import('plotly.js');
 const SunburstChart = ({ onClick, changeLevel }: SunBurstPlotProps) => {
     const [cancerTypeData, setCancerTypeData] = useState<CancerTypeDataArray>([]);
     const plotRef = useRef<HTMLDivElement>(null);
-    const clickDataRef = useRef<any>(null);
 
-    // Fetch cancer type data from the server
     useEffect(() => {
         fetch('/cancer/cancer_structure')
             .then((response) => {
@@ -35,31 +33,31 @@ const SunburstChart = ({ onClick, changeLevel }: SunBurstPlotProps) => {
             .then((data) => {
                 const root = { parent: '', child: 'ZERO2', count: 1 };
                 setCancerTypeData([root, ...data.cancer_types]);
-                // setCancerTypeData(data.cancer_types)
             })
             .catch((error) => {
                 console.error('Error fetching cancer type data: ', error);
             });
     }, []);
 
-    // Adjusts level of the data based on the input string
-    const data = (changeLevel: string): Partial<Plotly.SunburstData>[] => {
+    const generateData = (level: string): Partial<Plotly.SunburstData>[] => {
         return [{
             type: 'sunburst',
-            labels: cancerTypeData.map((item) => item.child),
-            ids: cancerTypeData.map((item) => item.child),
+            labels: cancerTypeData.map(item => item.child),
+            ids: cancerTypeData.map(item => item.child),
             parents: cancerTypeData.map(item => item.parent),
-            values: cancerTypeData.map((item) => item.count),
-            outsidetextfont: { size: 16, color: "#333" },
+            values: cancerTypeData.map(item => item.count),
+            outsidetextfont: { size: 16, color: '#333' },
             insidetextorientation: 'radial',
             maxdepth: 4,
             leaf: { opacity: 0.7 },
             marker: { line: { width: 1 } },
-            hovertext: cancerTypeData.map((item) =>
-                item.child === DEFAULT_CANCER_TYPE ? DEFAULT_CANCER_TYPE : `${item.child}: ${item.count}`
+            hovertext: cancerTypeData.map(item =>
+                item.child === DEFAULT_CANCER_TYPE
+                    ? DEFAULT_CANCER_TYPE
+                    : `${item.child}: ${item.count}`
             ),
             hoverinfo: 'text',
-            level: changeLevel,
+            level,
         }];
     };
 
@@ -67,6 +65,7 @@ const SunburstChart = ({ onClick, changeLevel }: SunBurstPlotProps) => {
         margin: { l: 0, r: 0, b: 0, t: 20 },
         width: 600,
         height: 600,
+        transition: { duration: 0, easing: 'linear' }, // Disable animation
         sunburstcolorway: [
             corePalette.green300,
             corePalette.green200,
@@ -80,40 +79,29 @@ const SunburstChart = ({ onClick, changeLevel }: SunBurstPlotProps) => {
         font: zccTheme.typography.label,
     };
 
-    // Initialize the Plotly sunburst chart
-    // This effect runs when the component mounts and whenever cancerTypeData changes
     useEffect(() => {
         if (!plotRef.current) return;
         const plotDiv = plotRef.current as unknown as Plotly.PlotlyHTMLElement;
 
-        Plotly.newPlot(plotDiv, data(DEFAULT_CANCER_TYPE), layout)
+        Plotly.react(plotDiv, generateData(changeLevel || DEFAULT_CANCER_TYPE), layout)
             .then(() => {
-                // Add event listeners for click events
-                // Updating of cancerType through onClick happens in the afterAnimation callback
-                // This ensures that the click data is captured after the animation completes
-                const handleClick = (data: object) => {
-                    clickDataRef.current = data;
-                }
-                const afterAnimation = () => {
-                    if (clickDataRef.current) {
-                        const { nextLevel } = clickDataRef.current;
-                        onClick(nextLevel);
-                        clickDataRef.current = null;
+                plotDiv.removeAllListeners?.('plotly_sunburstclick');
+                plotDiv.on('plotly_sunburstclick', (eventData: any) => {
+                    eventData.event.preventDefault();
+
+                    const clickedId = eventData?.points?.[0]?.id;
+                    if (clickedId) {
+                        onClick(clickedId);
                     }
-                }
-                plotDiv.on('plotly_sunburstclick', handleClick);
-                plotDiv.on('plotly_animated', afterAnimation);
+                });
             });
 
         return () => {
-            plotDiv.removeAllListeners?.('plotly_click');
-            plotDiv.removeAllListeners?.('plotly_animated');
+            plotDiv.removeAllListeners?.('plotly_sunburstclick');
         };
-    }, [cancerTypeData, onClick]);
+    }, [cancerTypeData, onClick, changeLevel]);
 
-    return (
-        <div ref={plotRef} />
-    );
+    return <div ref={plotRef} />;
 };
 
 export default React.memo(SunburstChart);

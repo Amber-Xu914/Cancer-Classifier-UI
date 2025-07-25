@@ -73,7 +73,7 @@ export default function Dashboard() {
             </p>
             <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
                 <div style={{ width: '50%' }}>
-                    <SunburstChart onClick={handleSunburstClick} />
+                    <SunburstChart onClick={handleSunburstClick} changeLevel={cancerType} />
                 </div>
                 <div style={{ width: '50%' }}>
                     <Umap cancerType={cancerType} />
