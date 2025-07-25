@@ -5,6 +5,7 @@ import styles from "./PatientResults.module.css";
 import { useLocation } from "react-router-dom";
 import '../Global.css';
 
+// pending floating box for summary
 export default function PatientResults() {
   const [selectedUMAPs, setSelectedUMAPs] = useState<Set<number>>(new Set());
   const cardRefs = useRef<Record<number, HTMLDivElement | null>>({});
@@ -112,6 +113,18 @@ export default function PatientResults() {
               prediction={result.prediction}
               probability={result.probability}
               figureJSON={result.figure}
+              onToggle={(layer, open) => {
+                setSelectedUMAPs((prev) => {
+                  const newSet = new Set(prev);
+                  const layerIndex = layer - 1;
+                  if (open) {
+                    newSet.add(layerIndex);
+                  } else {
+                    newSet.delete(layerIndex);
+                  }
+                  return newSet;
+                });
+              }}
             />
           </div>
         ))}

@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import TestingUmapPlot from "./TestingUmapPlot";
-import styles from './PatientResults.module.css'
+import styles from "./PatientResults.module.css";
 
 interface UmapCardProps {
   layer: number;
@@ -8,6 +9,7 @@ interface UmapCardProps {
   prediction: string;
   probability: number;
   figureJSON: string | object;
+  onToggle?: (layer: number, open: boolean) => void;
 }
 
 export function UmapCard({
@@ -17,38 +19,60 @@ export function UmapCard({
   prediction,
   probability,
   figureJSON,
+  onToggle,
 }: UmapCardProps) {
-  let parsedFigure: any = null;
-  try {
-    parsedFigure = typeof figureJSON === "string" ? JSON.parse(figureJSON) : figureJSON;
-  } catch (err) {
-    console.error("Invalid figure JSON:", err);
-  }
+  const [open, setOpen] = useState(selected);
+
+  // Sync with external selected prop
+  useEffect(() => {
+    setOpen(selected);
+  }, [selected]);
+
+  // Handle dropdown toggle and notify parent
+  const handleToggle = () => {
+    const newOpen = !open;
+    setOpen(newOpen);
+    if (onToggle) {
+      onToggle(layer, newOpen);
+    }
+  };
+
+  const parsedFigure =
+    typeof figureJSON === "string" ? JSON.parse(figureJSON) : figureJSON;
 
   return (
-    <div>
-      <h3>MODEL LEVEL: {modelName}</h3>
-      <p>
-        <span style={{ marginRight: '2rem' }}>
-          <strong>Model Level:</strong> {modelName}
+    <div className={styles.dropdownCard}>
+      <button className={styles.dropdownHeader} onClick={handleToggle}>
+        <span
+          className={`${styles.dropdownArrow} ${open ? styles.arrowOpen : ""}`}
+        >
+          ▼
         </span>
-        <span style={{ marginRight: '2rem' }}>
-          <strong>Prediction:</strong> {prediction}
+        <span style={{ marginLeft: "8px" }}>
+          MODEL LEVEL: <strong>{modelName}</strong>
         </span>
-        <span>
-          <strong>Probability:</strong> {probability}
-        </span>
-      </p>
+      </button>
 
-      {selected && parsedFigure && (
+      <div
+        className={styles.dropdownContent}
+        style={{
+          maxHeight: open ? "1000px" : "0px",
+          opacity: open ? 1 : 0,
+          transition: "max-height 0.4s ease, opacity 0.3s ease",
+          overflow: "hidden",
+        }}
+      >
+        <p style={{ margin: "16px 0" }}>
+          <strong>Model Level:</strong> {modelName} &nbsp;&nbsp;
+          <strong>Prediction:</strong> {prediction} &nbsp;&nbsp;
+          <strong>Probability:</strong> {probability}
+        </p>
+
         <div className={styles.umapContainer}>
           <TestingUmapPlot figure={parsedFigure} />
         </div>
-      )}
-
-      {selected && !parsedFigure && (
-        <p style={{ color: 'red' }}>!ERROR</p>
-      )}
+      </div>
     </div>
   );
 }
+
