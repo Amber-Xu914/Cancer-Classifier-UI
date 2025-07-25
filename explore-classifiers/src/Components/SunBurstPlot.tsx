@@ -22,8 +22,6 @@ const SunburstChart = (
 
     const layout: Partial<Plotly.Layout> = {
         margin: { l: 0, r: 0, b: 0, t: 20 },
-        width: 600,
-        height: 600,
         sunburstcolorway: [
             corePalette.green300,
             corePalette.green200,
@@ -35,12 +33,18 @@ const SunburstChart = (
         ],
         extendsunburstcolorway: true,
         font: zccTheme.typography.label,
+        autosize: true
     };
 
     const handleClick = (data: SunburstClickEvent) => {
         const { nextLevel } = data;
         onClick(nextLevel);
     }
+
+    const handleInitialized = (_: any, graphDiv: Plotly.PlotlyHTMLElement) => {
+        graphDiv.removeAllListeners?.('plotly_sunburstclick');
+        graphDiv.on?.('plotly_sunburstclick', handleClick);
+    };
 
     return (
         <AnimatePresence mode="wait">
@@ -52,7 +56,9 @@ const SunburstChart = (
                 <Plot
                     data={plotData}
                     layout={layout}
-                    onSunburstClick={handleClick}
+                    onInitialized={handleInitialized}
+                    useResizeHandler
+                    style={{ width: '100%', height: '500px' }}
                 />
             </motion.div>
         </AnimatePresence>

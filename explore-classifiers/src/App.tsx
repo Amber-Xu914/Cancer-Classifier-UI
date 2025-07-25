@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles';
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Dashboard from './Components/Dashboard';
 import MethylationClassifierProvider from './Components/MethylationClassifierProvider';
 import NavBar from './Components/NavBar';
