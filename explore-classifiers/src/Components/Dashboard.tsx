@@ -73,12 +73,6 @@ export default function Dashboard() {
             </p>
             <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
                 <div style={{ width: '50%' }}>
-                    /*
-                    <SunburstChart
-                    onClick={handleSunburstClick}
-                    selectedCancerType={cancerType}
-                    />
-                    */
                     {cancerHireachyData.length > 0 ? (<SunburstChart
                         data={cancerHireachyData}
                         onClick={handleSunburstClick}
