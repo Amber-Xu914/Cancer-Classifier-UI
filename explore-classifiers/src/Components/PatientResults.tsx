@@ -14,61 +14,33 @@ export default function PatientResults() {
   const [value, setValue] = useState('');
 
   useEffect(() => {
-    // mock data
-    const mockResults = [
-      {
-        model_name: "ZERO2",
-        prediction: "Positive",
-        probability: 0.92,
-        figure: {},
-      },
-      {
-        model_name: "First Level",
-        prediction: "Negative",
-        probability: 0.15,
-        figure: {},
-      },
-      {
-        model_name: "Second Level",
-        prediction: "Positive",
-        probability: 0.83,
-        figure: {},
-      },
-      {
-        model_name: "Third Level",
-        prediction: "Negative",
-        probability: 0.33,
-        figure: {},
-      },
-    ];
-
-    setResults(mockResults);
-    setLoading(false);
-
     const searchParams = new URLSearchParams(location.search);
-    const patientId = searchParams.get("value") || "unknown";
-    setValue(patientId);
+    const sampleId = searchParams.get("value");
 
-    /*
-    const searchParams = new URLSearchParams(location.search);
-    const value = searchParams.get("value");
+    console.log("Extracted sampleId from URL:", sampleId);
 
-    if (value) {
-      fetch(`/sample/${value}`)
-        .then(res => res.json())
-        .then(data => {
+    if (sampleId) {
+      setValue(sampleId);
+
+      fetch(`/sample/${sampleId}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
           setResults(data.results || []);
           setLoading(false);
         })
-        .catch(err => {
-          console.error("Error fetching patient data:", err);
+        .catch((err) => {
+          console.error("Error fetching patient data: ", err);
           setResults([]);
           setLoading(false);
         });
     } else {
       setLoading(false);
     }
-    */
   }, [location]);
 
   const handleThumbnailClick = (id: number) => {
@@ -113,9 +85,8 @@ export default function PatientResults() {
             <UmapThumbnail
               key={idx}
               id={String(idx)}
-              // TODO: change to dynamic UMAP pic
-              src="/logo192.png"
-              summary={`${result.model_name}: ${result.prediction}`}
+              modelName={result.model_name}
+              probability={result.probability}
               isSelected={selectedUMAPs.has(idx)}
               onClick={() => handleThumbnailClick(idx)}
             />

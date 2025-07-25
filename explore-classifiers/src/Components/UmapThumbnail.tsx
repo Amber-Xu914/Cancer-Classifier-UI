@@ -1,28 +1,30 @@
 import React from "react";
-import "./UmapThumbnail.css";
+import './UmapThumbnail.css';
 
 interface Props {
   id: string;
-  src: string;
-  summary: string;
+  modelName: string;
+  probability: number;
   isSelected: boolean;
   onClick: () => void;
 }
 
 const UmapThumbnail: React.FC<Props> = ({
-  src,
-  summary,
+  modelName,
+  probability,
   isSelected,
   onClick,
 }) => {
   return (
     <div
+      className={`thumbnail ${isSelected ? 'selected' : ''}`}
       onClick={onClick}
-      className={`thumbnail ${isSelected ? "selected" : ""}`}
     >
-      <img src={src} alt={summary} className="thumbnail-img" />
       <div className="thumbnail-label">
-        <p>{summary}</p>
+        <strong>Level:</strong><br />
+        {modelName}<br />
+        <strong>Probability:</strong><br />
+        {probability.toFixed(2)}
       </div>
     </div>
   );

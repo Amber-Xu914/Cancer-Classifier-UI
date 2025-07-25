@@ -1,4 +1,5 @@
 import TestingUmapPlot from "./TestingUmapPlot";
+import styles from './PatientResults.module.css'
 
 interface UmapCardProps {
   layer: number;
@@ -26,7 +27,7 @@ export function UmapCard({
 
   return (
     <div>
-      <h3>Prediction {layer}</h3>
+      <h3>MODEL LEVEL: {modelName}</h3>
       <p>
         <span style={{ marginRight: '2rem' }}>
           <strong>Model Level:</strong> {modelName}
@@ -40,7 +41,9 @@ export function UmapCard({
       </p>
 
       {selected && parsedFigure && (
-        <TestingUmapPlot figure={parsedFigure} />
+        <div className={styles.umapContainer}>
+          <TestingUmapPlot figure={parsedFigure} />
+        </div>
       )}
 
       {selected && !parsedFigure && (
