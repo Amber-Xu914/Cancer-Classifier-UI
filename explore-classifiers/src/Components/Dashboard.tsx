@@ -4,10 +4,11 @@ import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/Dashbo
 import { useDashboard } from '../Contexts/DashboardContexts';
 import { mapCancerToLevel } from '../Helpers/mapCancerToLevel';
 import { CancerTypeData, getCancerHireachy } from '../Service/getCancerHireachyData';
-import LoadingAnimation from './Animations/LoadingAnimation';
-import FilterSelect from './Common/FilterSelect';
 import SunburstChart from './SunBurstPlot';
 import Umap from './Umap';
+import { useRef } from 'react';
+import FilterSelect, { FilterSelectHandles } from './Common/FilterSelect';
+
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function Dashboard() {
     const location = useLocation();
     const { searchQuery, setSearchQuery, cancerType, setCancerType } = useDashboard();
     const [cancerHireachyData, setCancerHireachyData] = useState<CancerTypeData[]>([]);
+    const filterSelectRef = useRef<FilterSelectHandles>(null);
 
     useEffect(() => {
         getCancerHireachy()
@@ -48,6 +50,10 @@ export default function Dashboard() {
 
     const handleSunburstClick = useCallback((value: string | null) => {
         console.log('Sunburst clicked with value:', value);
+
+        // clear search bar while clicking sunburst chart
+        filterSelectRef.current?.clearInputs();
+
         if (value) {
             setSearchQuery(`Showing results for: ${value}`);
             setCancerType(value);
@@ -63,6 +69,7 @@ export default function Dashboard() {
                 Explore Paediatric Cancer Classifications Across Models and Visualizations.
             </h1>
             <FilterSelect
+                ref={filterSelectRef}
                 onSearch={handleSearch}
                 data={cancerHireachyData}
             />
