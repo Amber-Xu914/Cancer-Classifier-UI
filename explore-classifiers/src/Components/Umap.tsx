@@ -31,8 +31,14 @@ const Umap = ({ cancerType }: UmapProps) => {
     return umap ? (
         <Plot
             data={umap.data}
-            layout={umap.layout}
-            style={{ width: '100%' }}
+            layout={{
+                ...umap.layout,
+                width: undefined,
+                height: undefined,
+                autosize: true,
+            }}
+            useResizeHandler
+            style={{ width: '100%', height: '500px' }}
         />
     ) : (
         <LoadingAnimation />

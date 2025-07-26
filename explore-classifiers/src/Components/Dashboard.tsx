@@ -20,8 +20,6 @@ export default function Dashboard() {
         getCancerHireachy()
             .then((data) => {
                 setCancerHireachyData(data);
-                const test = mapCancerToLevel(data);
-                console.log(test);
             })
             .catch(err => console.error(err));
     }, []);
@@ -71,11 +69,19 @@ export default function Dashboard() {
             <p style={{ marginTop: '40px', textAlign: 'center' }}>
                 {searchQuery}
             </p>
-            <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
-                <div style={{ width: '50%' }}>
-                    <SunburstChart onClick={handleSunburstClick} changeLevel={cancerType} />
+            <div style={{ display: 'flex', gap: '20px', marginTop: '30px' }}>
+                <div style={{ flex: 2 }}>
+                    {cancerHireachyData.length > 0 ? (
+                        <SunburstChart
+                            data={cancerHireachyData}
+                            onClick={handleSunburstClick}
+                            level={cancerType}
+                        />
+                    ) : (
+                        <LoadingAnimation />
+                    )}
                 </div>
-                <div style={{ width: '50%' }}>
+                <div style={{ flex: 3 }}>
                     <Umap cancerType={cancerType} />
                 </div>
             </div>
