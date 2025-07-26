@@ -3,8 +3,8 @@ import UmapThumbnail from "./UmapThumbnail";
 
 export interface UmapData {
   id: string;
-  src: string;
-  summary: string;
+  modelName: string;
+  probability: number;
 }
 
 interface SidebarProps {
@@ -24,10 +24,9 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="flex flex-col space-y-4">
         {UMAP_PREVIEWS.map((umap) => (
           <UmapThumbnail
-            key={umap.id}
             id={umap.id}
-            src={umap.src}
-            summary={umap.summary}
+            modelName={umap.modelName}
+            probability={umap.probability}
             isSelected={selectedUMAP === umap.id}
             onClick={() => setSelectedUMAP(umap.id)}
           />

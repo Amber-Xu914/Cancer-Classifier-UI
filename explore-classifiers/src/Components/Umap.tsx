@@ -11,6 +11,7 @@ const Umap = ({ cancerType }: UmapProps) => {
 
     // Fetch UMAP data based on the selected cancer type
     useEffect(() => {
+        console.log("cancer type: ", {cancerType});
         fetch(`/cancer_type/${cancerType}`)
             .then((response) => {
                 if (!response.ok) {

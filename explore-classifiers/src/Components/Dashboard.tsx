@@ -58,7 +58,7 @@ export default function Dashboard() {
     }, [setSearchQuery, setCancerType]);
 
     return (
-        <div style={{ padding: '20px', fontFamily: 'Arial' }}>
+        <div style={{ padding: '20px' }}>
             <h1 style={{ marginBottom: '40px' }}>
                 Explore Paediatric Cancer Classifications Across Models and Visualizations.
             </h1>
