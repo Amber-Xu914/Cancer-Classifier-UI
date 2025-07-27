@@ -2,11 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from '../Constants/Common/DashboardDefaults';
 import { useDashboard } from '../Contexts/DashboardContexts';
-import { CancerTypeData, getCancerHireachy } from '../Service/getCancerHireachyData';
 import LoadingAnimation from './Animations/LoadingAnimation';
-import FilterSelect from './Common/FilterSelect';
+import { CancerTypeData, getCancerHireachy } from '../Service/getCancerHireachyData';
 import SunburstChart from './SunBurstPlot';
 import Umap from './Umap';
+import { useRef } from 'react';
+import FilterSelect, { FilterSelectHandles } from './Common/FilterSelect';
+
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -14,6 +16,7 @@ export default function Dashboard() {
     const location = useLocation();
     const { searchQuery, setSearchQuery, cancerType, setCancerType } = useDashboard();
     const [cancerHireachyData, setCancerHireachyData] = useState<CancerTypeData[]>([]);
+    const filterSelectRef = useRef<FilterSelectHandles>(null);
 
     useEffect(() => {
         getCancerHireachy()
@@ -47,6 +50,10 @@ export default function Dashboard() {
 
     const handleSunburstClick = useCallback((value: string | null) => {
         console.log('Sunburst clicked with value:', value);
+
+        // clear search bar while clicking sunburst chart
+        filterSelectRef.current?.clearInputs();
+
         if (value) {
             setSearchQuery(`Showing results for: ${value}`);
             setCancerType(value);
@@ -58,18 +65,19 @@ export default function Dashboard() {
 
     return (
         <div style={{ padding: '20px' }}>
-            <h1 style={{ marginBottom: '40px' }}>
-                Explore Paediatric Cancer Classifications Across Models and Visualizations.
-            </h1>
+            <h2 style={{ marginBottom: '40px' }}>
+                Explore paediatric cancer types with sunburst chart and 3D UMAP visualizations.
+            </h2>
             <FilterSelect
+                ref={filterSelectRef}
                 onSearch={handleSearch}
                 data={cancerHireachyData}
             />
             <p style={{ marginTop: '40px', textAlign: 'center' }}>
                 {searchQuery}
             </p>
-            <div style={{ display: 'flex', gap: '40px', marginTop: '30px' }}>
-                <div style={{ width: '50%' }}>
+            <div style={{ display: 'flex', gap: '20px', marginTop: '30px' }}>
+                <div style={{ flex: 2 }}>
                     {cancerHireachyData.length > 0 ? (
                         <SunburstChart
                             data={cancerHireachyData}
@@ -80,7 +88,7 @@ export default function Dashboard() {
                         <LoadingAnimation />
                     )}
                 </div>
-                <div style={{ width: '50%' }}>
+                <div style={{ flex: 3 }}>
                     <Umap cancerType={cancerType} />
                 </div>
             </div>
