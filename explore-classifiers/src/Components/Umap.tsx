@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import LoadingAnimation from './Animations/LoadingAnimation';
+import { Scatter3dData } from 'plotly.js';
+import { buildUmapData } from '../Helpers/buildUmapData';
 
 interface UmapProps {
     cancerType: string;
@@ -11,7 +13,6 @@ const Umap = ({ cancerType }: UmapProps) => {
 
     // Fetch UMAP data based on the selected cancer type
     useEffect(() => {
-        console.log("cancer type: ", {cancerType});
         fetch(`/cancer_type/${cancerType}`)
             .then((response) => {
                 if (!response.ok) {
@@ -28,9 +29,11 @@ const Umap = ({ cancerType }: UmapProps) => {
             })
     }, [cancerType]);
 
+    const data: Partial<Scatter3dData>[] | undefined = umap ? buildUmapData(umap.data) : undefined;
+
     return umap ? (
         <Plot
-            data={umap.data}
+            data={data}
             layout={{
                 ...umap.layout,
                 width: undefined,

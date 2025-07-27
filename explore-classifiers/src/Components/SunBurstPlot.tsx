@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { SunburstClickEvent } from 'plotly.js';
+import { PlotlyHTMLElement, SunburstClickEvent, SunburstData } from 'plotly.js';
 import React from 'react';
 import Plot from 'react-plotly.js';
 import { CancerTypeData } from '../Service/getCancerHireachyData';
@@ -18,7 +18,7 @@ const Plotly = require('plotly.js-dist') as typeof import('plotly.js');
 const SunburstChart = (
     { data, level, onClick }: SunburstChartProps
 ) => {
-    const plotData = useSunburstData(data, level);
+    const plotData: Partial<SunburstData>[] = useSunburstData(data, level);
 
     const layout: Partial<Plotly.Layout> = {
         margin: { l: 0, r: 0, b: 0, t: 20 },
