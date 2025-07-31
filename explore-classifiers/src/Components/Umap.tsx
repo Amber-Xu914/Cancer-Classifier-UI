@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import LoadingAnimation from './Animations/LoadingAnimation';
@@ -11,18 +12,55 @@ interface UmapProps {
 
 const Umap = ({ cancerType }: UmapProps) => {
     const [umap, setUmap] = useState<any>(null);
+    const [hasData, setHasData] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
+        console.log("cancer type: ", { cancerType });
+        setIsLoading(true);
+        setHasData(true);
+        setUmap(null); // Clear previous UMAP when type changes
+
         getCancerUMAP(cancerType)
             .then((data) => {
                 setUmap(data);
+                setHasData(true);
             })
             .catch(err => console.error(err));
-    }, [cancerType]);
+        setHasData(false);
+        setUmap(null);
+            .finally(() => {
+            setIsLoading(false);
+        });
+}, [cancerType]);
 
-    const data: Partial<Scatter3dData>[] | undefined = umap ? buildUmapData(umap.data) : undefined;
+if (isLoading) {
+    return <LoadingAnimation />;
+}
 
-    return umap ? (
+if (!hasData) {
+    return (
+        <div
+            style={{
+                height: '500px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                border: '1px dashed #ccc',
+                borderRadius: '8px',
+                fontStyle: 'italic',
+                color: '#888',
+            }}
+        >
+            No UMAP available for "{cancerType}"
+        </div>
+    );
+}
+
+if (umap) {
+    const data: Partial<Scatter3dData>[] = buildUmapData(umap.data);
+
+    return (
         <Plot
             data={data}
             layout={{
@@ -34,9 +72,10 @@ const Umap = ({ cancerType }: UmapProps) => {
             useResizeHandler
             style={{ width: '100%', height: '500px' }}
         />
-    ) : (
-        <LoadingAnimation />
     );
 }
+
+return null;
+};
 
 export default Umap;
