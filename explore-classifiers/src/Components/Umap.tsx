@@ -16,7 +16,6 @@ const Umap = ({ cancerType }: UmapProps) => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        console.log("cancer type: ", { cancerType });
         setIsLoading(true);
         setHasData(true);
         setUmap(null); // Clear previous UMAP when type changes
@@ -26,56 +25,58 @@ const Umap = ({ cancerType }: UmapProps) => {
                 setUmap(data);
                 setHasData(true);
             })
-            .catch(err => console.error(err));
-        setHasData(false);
-        setUmap(null);
+            .catch(err => {
+                console.error(err);
+                setHasData(false);
+                setUmap(null);
+            })
             .finally(() => {
-            setIsLoading(false);
-        });
-}, [cancerType]);
+                setIsLoading(false);
+            });
+    }, [cancerType]);
 
-if (isLoading) {
-    return <LoadingAnimation />;
-}
+    if (isLoading) {
+        return <LoadingAnimation />;
+    }
 
-if (!hasData) {
-    return (
-        <div
-            style={{
-                height: '500px',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                border: '1px dashed #ccc',
-                borderRadius: '8px',
-                fontStyle: 'italic',
-                color: '#888',
-            }}
-        >
-            No UMAP available for "{cancerType}"
-        </div>
-    );
-}
+    if (!hasData) {
+        return (
+            <div
+                style={{
+                    height: '500px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    border: '1px dashed #ccc',
+                    borderRadius: '8px',
+                    fontStyle: 'italic',
+                    color: '#888',
+                }}
+            >
+                No UMAP available for "{cancerType}"
+            </div>
+        );
+    }
 
-if (umap) {
-    const data: Partial<Scatter3dData>[] = buildUmapData(umap.data);
+    if (umap) {
+        const data: Partial<Scatter3dData>[] = buildUmapData(umap.data);
 
-    return (
-        <Plot
-            data={data}
-            layout={{
-                ...umap.layout,
-                width: undefined,
-                height: undefined,
-                autosize: true,
-            }}
-            useResizeHandler
-            style={{ width: '100%', height: '500px' }}
-        />
-    );
-}
+        return (
+            <Plot
+                data={data}
+                layout={{
+                    ...umap.layout,
+                    width: undefined,
+                    height: undefined,
+                    autosize: true,
+                }}
+                useResizeHandler
+                style={{ width: '100%', height: '500px' }}
+            />
+        );
+    }
 
-return null;
+    return null;
 };
 
 export default Umap;
