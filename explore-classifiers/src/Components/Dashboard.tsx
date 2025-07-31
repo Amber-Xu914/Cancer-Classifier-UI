@@ -7,7 +7,7 @@ import { CancerTypeData, getCancerHireachy } from '../Service/getCancerHireachyD
 import SunburstChart from './SunBurstPlot';
 import Umap from './Umap';
 import { useRef } from 'react';
-import FilterSelect, { FilterSelectHandles } from './Common/FilterSelect';
+import FilterSelect, { FilterSelectHandles } from './FilterSelect';
 
 
 export default function Dashboard() {
