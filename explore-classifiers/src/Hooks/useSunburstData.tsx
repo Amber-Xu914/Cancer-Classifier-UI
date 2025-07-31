@@ -1,7 +1,7 @@
 import { SunburstData } from "plotly.js";
-import { DEFAULT_CANCER_TYPE } from "../../Constants/Common/DashboardDefaults";
-import { CancerTypeData } from "../../Service/getCancerHireachyData";
 import { useMemo } from "react";
+import { DEFAULT_CANCER_TYPE } from "../Constants/DashboardDefaults";
+import { CancerTypeData } from "../Service/getCancerHireachyData";
 
 export const useSunburstData = (
     cancerHireachyArray: CancerTypeData[],

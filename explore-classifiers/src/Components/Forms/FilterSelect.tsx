@@ -8,12 +8,11 @@ import {
 } from 'react';
 import {
     mapCancerToLevel
-} from '../Helpers/mapCancerToLevel';
-import { CancerTypeData } from '../Service/getCancerHireachyData';
+} from '../../Helpers/mapCancerToLevel';
+import { CancerTypeData } from '../../Service/getCancerHireachyData';
 import { FilterTypeSelect } from './FilterTypeSelect';
-import { usePatientIds } from './Hooks/useSampleIds';
-import { useSearchLogic } from './Hooks/useSearchLogic';
 import { SearchAutocomplete } from './SearchAutocomplete';
+import { useSampleIds, useSearchLogic } from '../../Hooks';
 
 export interface FilterSelectHandles {
     clearInputs: () => void;
@@ -34,7 +33,7 @@ const FilterSelect = forwardRef<FilterSelectHandles, FilterSelectProps>(
         } | null>(null);
         const [inputText, setInputText] = useState('');
 
-        const { patientIds, loading } = usePatientIds();
+        const { patientIds, loading } = useSampleIds();
         const cancerTypeOptions = mapCancerToLevel(data);
         const { handleSearch } = useSearchLogic({ onSearch, cancerTypeOptions, patientIds });
 

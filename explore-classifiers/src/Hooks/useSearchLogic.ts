@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { CancerTypeOptions } from "../../Helpers/mapCancerToLevel";
-import { isValidCancerType, isValidPatientId } from "../../Utils/searchValidation";
+import { CancerTypeOptions } from "../Helpers/mapCancerToLevel";
+import { isValidCancerType, isValidPatientId } from "../Utils/searchValidation";
 
 interface UseSearchLogicProps {
     onSearch: (filter: string, value: string | null) => void;

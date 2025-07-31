@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export const usePatientIds = () => {
+export const useSampleIds = () => {
     const [patientIds, setPatientIds] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);

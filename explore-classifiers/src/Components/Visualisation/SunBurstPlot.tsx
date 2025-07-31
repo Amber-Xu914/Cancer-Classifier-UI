@@ -1,11 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
-import { PlotlyHTMLElement, SunburstClickEvent, SunburstData } from 'plotly.js';
+import { SunburstClickEvent, SunburstData } from 'plotly.js';
 import React from 'react';
 import Plot from 'react-plotly.js';
-import { CancerTypeData } from '../Service/getCancerHireachyData';
-import { corePalette } from '../Themes/colours';
-import zccTheme from '../Themes/zccTheme';
-import { useSunburstData } from './Hooks/useSunburstData';
+import { CancerTypeData } from '../../Service/getCancerHireachyData';
+import { corePalette } from '../../Themes/colours';
+import zccTheme from '../../Themes/zccTheme';
+import { useSunburstData } from '../../Hooks';
 
 type SunburstChartProps = {
     data: CancerTypeData[],
@@ -15,7 +15,7 @@ type SunburstChartProps = {
 
 const Plotly = require('plotly.js-dist') as typeof import('plotly.js');
 
-const SunburstChart = (
+const SunburstPlot = (
     { data, level, onClick }: SunburstChartProps
 ) => {
     const plotData: Partial<SunburstData>[] = useSunburstData(data, level);
@@ -65,4 +65,4 @@ const SunburstChart = (
     );
 };
 
-export default React.memo(SunburstChart);
+export default React.memo(SunburstPlot);

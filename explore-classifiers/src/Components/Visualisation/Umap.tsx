@@ -1,10 +1,10 @@
 
 import { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
-import LoadingAnimation from './Animations/LoadingAnimation';
 import { Scatter3dData } from 'plotly.js';
-import { buildUmapData } from '../Helpers/buildUmapData';
-import { getCancerUMAP } from '../Service/getCancerUMAPData';
+import { buildUmapData } from '../../Helpers/buildUmapData';
+import { getCancerUMAP } from '../../Service/getCancerUMAPData';
+import LoadingAnimation from '../Animations/LoadingAnimation';
 
 interface UmapProps {
     cancerType: string;
