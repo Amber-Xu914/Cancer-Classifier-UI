@@ -18,7 +18,7 @@ const Umap = ({ cancerType }: UmapProps) => {
     useEffect(() => {
         setIsLoading(true);
         setHasData(true);
-        setUmap(null); // Clear previous UMAP when type changes
+        setUmap(null);
 
         getCancerUMAP(cancerType)
             .then((data) => {
@@ -34,10 +34,6 @@ const Umap = ({ cancerType }: UmapProps) => {
                 setIsLoading(false);
             });
     }, [cancerType]);
-
-    if (isLoading) {
-        return <LoadingAnimation />;
-    }
 
     if (!hasData) {
         return (
@@ -58,25 +54,20 @@ const Umap = ({ cancerType }: UmapProps) => {
         );
     }
 
-    if (umap) {
-        const data: Partial<Scatter3dData>[] = buildUmapData(umap.data);
+    const data: Partial<Scatter3dData>[] | undefined = umap ? buildUmapData(umap.data) : undefined;
 
-        return (
-            <Plot
-                data={data}
-                layout={{
-                    ...umap.layout,
-                    width: undefined,
-                    height: undefined,
-                    autosize: true,
-                }}
-                useResizeHandler
-                style={{ width: '100%', height: '500px' }}
-            />
-        );
-    }
-
-    return null;
+    return isLoading ? <LoadingAnimation /> :
+        <Plot
+            data={data}
+            layout={{
+                ...umap.layout,
+                width: undefined,
+                height: undefined,
+                autosize: true,
+            }}
+            useResizeHandler
+            style={{ width: '100%', height: '500px' }}
+        />;
 };
 
 export default Umap;
