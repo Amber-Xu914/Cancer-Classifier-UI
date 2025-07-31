@@ -12,30 +12,31 @@ interface UmapProps {
 
 const Umap = ({ cancerType }: UmapProps) => {
     const [umap, setUmap] = useState<any>(null);
-    const [hasData, setHasData] = useState(true);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
         setIsLoading(true);
-        setHasData(true);
         setUmap(null);
+        setHasError(false);
 
         getCancerUMAP(cancerType)
             .then((data) => {
                 setUmap(data);
-                setHasData(true);
+                setHasError(false);
             })
             .catch(err => {
                 console.error(err);
-                setHasData(false);
-                setUmap(null);
+                setHasError(true);
             })
             .finally(() => {
                 setIsLoading(false);
             });
     }, [cancerType]);
 
-    if (!hasData) {
+    if (isLoading) return <LoadingAnimation />;
+
+    if (hasError) {
         return (
             <div
                 style={{
