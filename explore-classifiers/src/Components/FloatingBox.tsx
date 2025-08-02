@@ -43,7 +43,7 @@ const FloatingBox: React.FC<FloatingBoxProps> = ({ open, onClose, summaries }) =
         {/* Header */}
         <Box className={styles.header}>
           <Typography variant="h6" component="h2">
-            Prediction Summary
+            Summary Place Holder
           </Typography>
           <IconButton onClick={onClose} className={styles.closeBtn} aria-label="Close">
             <CloseIcon />
