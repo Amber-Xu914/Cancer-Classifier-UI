@@ -5,9 +5,8 @@ import styles from "./PatientResults.module.css";
 import { useLocation } from "react-router-dom";
 import { TextField } from "@mui/material";
 import '../Global.css';
+import FloatingBox from './FloatingBox';
 
-
-// pending floating box for summary
 export default function PatientResults() {
   const [selectedUMAPs, setSelectedUMAPs] = useState<Set<number>>(new Set());
   const cardRefs = useRef<Record<number, HTMLDivElement | null>>({});
@@ -15,12 +14,12 @@ export default function PatientResults() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [value, setValue] = useState('');
+  const [showFloatingBox, setShowFloatingBox] = useState(true);
+  const [summaryList, setSummaryList] = useState<string[]>([]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const sampleId = searchParams.get("value");
-
-    console.log("Extracted sampleId from URL:", sampleId);
 
     if (sampleId) {
       setValue(sampleId);
@@ -47,9 +46,12 @@ export default function PatientResults() {
   }, [location]);
 
   const handleThumbnailClick = (id: number) => {
+    const result = results[id];
+
     setSelectedUMAPs((prev) => {
       const newSet = new Set(prev);
       const isNewlyAdded = !newSet.has(id);
+
       if (newSet.has(id)) {
         newSet.delete(id);
       } else {
@@ -57,7 +59,17 @@ export default function PatientResults() {
       }
 
       if (isNewlyAdded) {
-        // wait till the UMAP to come out a bit
+        const newSummary = `Model: ${result.model_name}\nPrediction: ${result.prediction}\nProbability: ${result.probability.toFixed(2)}`;
+
+        setSummaryList((prevSummaries) => {
+          if (!prevSummaries.includes(newSummary)) {
+            return [...prevSummaries, newSummary];
+          }
+          return prevSummaries;
+        });
+
+        setShowFloatingBox(true);
+
         setTimeout(() => {
           cardRefs.current[id]?.scrollIntoView({
             behavior: "smooth",
@@ -72,18 +84,15 @@ export default function PatientResults() {
 
   if (loading) return <div>Loading...</div>;
 
-  // handle no results
   if (results.length === 0) {
     return <div style={{ padding: "2rem" }}>No summary of this cancer type available.</div>;
   }
 
-  // Display data
   return (
     <div className={styles.container}>
       {/* sidebar */}
       <aside className={styles.sidebar}>
         <h3>Patient ID: {value}</h3>
-        {/* MUI Filter */}
         <TextField
           placeholder="Min Probability"
           variant="outlined"
@@ -108,7 +117,7 @@ export default function PatientResults() {
           InputProps={{
             style: { fontSize: "0.75rem" },
             inputProps: {
-              step: 0.01, // change unit to 0.01
+              step: 0.01,
               min: 0,
               max: 1,
             },
@@ -128,15 +137,15 @@ export default function PatientResults() {
         </div>
       </aside>
 
-      {/* UMAP display */}
-      <main className={styles.main}>
-        <h2 style={{ textAlign: "center" }}>
+      {/* UMAP display area */}
+      <main className={showFloatingBox ? styles.mainWithSidebar : styles.main}>
+        <h2 style={{ textAlign: "left" }}>
           Click the preview on the left to view each prediction's UMAP
         </h2>
         {results.map((result, idx) => (
           <div
             key={idx}
-            ref={(el) => { cardRefs.current[idx] = el; }} //element rolling
+            ref={(el) => { cardRefs.current[idx] = el; }}
             style={{ marginBottom: "24px", scrollMarginTop: "80px" }}
           >
             <UmapCard
@@ -162,6 +171,36 @@ export default function PatientResults() {
           </div>
         ))}
       </main>
+
+      {/* Right summary box */}
+      <FloatingBox
+        open={showFloatingBox}
+        onClose={() => setShowFloatingBox(false)}
+        summaries={summaryList}
+      />
+
+      {/* Toggle reopen button */}
+      {!showFloatingBox && (
+        <button
+          onClick={() => setShowFloatingBox(true)}
+          style={{
+            position: "fixed",
+            top: "50%",
+            right: 0,
+            transform: "translateY(-50%)",
+            backgroundColor: "#00A859",
+            color: "white",
+            border: "none",
+            padding: "8px 12px",
+            borderTopLeftRadius: "6px",
+            borderBottomLeftRadius: "6px",
+            cursor: "pointer",
+            zIndex: 1301,
+          }}
+        >
+          &#8592; Summary
+        </button>
+      )}
     </div>
   );
 }
