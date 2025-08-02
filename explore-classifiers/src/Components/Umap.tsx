@@ -1,9 +1,10 @@
- 
 import { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 import LoadingAnimation from './Animations/LoadingAnimation';
 import { Scatter3dData } from 'plotly.js';
 import { buildUmapData } from '../Helpers/buildUmapData';
+import { useNavigate } from 'react-router-dom';
+import '../Global.css';
 
 interface UmapProps {
     cancerType: string;
@@ -13,6 +14,8 @@ const Umap = ({ cancerType }: UmapProps) => {
     const [umap, setUmap] = useState<any>(null);
     const [hasData, setHasData] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log("cancer type: ", { cancerType });
@@ -41,6 +44,16 @@ const Umap = ({ cancerType }: UmapProps) => {
                 setIsLoading(false);
             });
     }, [cancerType]);
+
+    // click to navigate to patient result page
+    const handlePointClick = (event: any) => {
+        const point = event.points?.[0];
+        const patientID = point?.customdata;
+        console.log("patientid is ", patientID);
+        if (patientID) {
+            navigate(`/PatientResults?filter=Patient&value=${patientID}`);
+        }
+    };
 
     if (isLoading) {
         return <LoadingAnimation />;
@@ -73,10 +86,12 @@ const Umap = ({ cancerType }: UmapProps) => {
                 data={data}
                 layout={{
                     ...umap.layout,
+                    hovermode: 'closest',
                     width: undefined,
                     height: undefined,
                     autosize: true,
                 }}
+                onClick={handlePointClick}
                 useResizeHandler
                 style={{ width: '100%', height: '500px' }}
             />
