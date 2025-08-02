@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { AnimatePresence } from 'framer-motion';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import Dashboard from './Components/Pages/Dashboard';
+import Dashboard from './Components/Pages/Dashboard/Dashboard';
 import MethylationClassifierProvider from './Components/MethylationClassifierProvider';
 import zccTheme from './Themes/zccTheme';
 import NavBar from './Components/NavBar';

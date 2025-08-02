@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { useCancerHierarchy, useDashboard } from '../../Hooks';
-import LoadingAnimation from '../Animations/LoadingAnimation';
-import FilterSelect, { FilterSelectHandles } from '../Forms/FilterSelect';
-import Umap from '../Visualisation/Umap';
+import { useCancerHierarchy, useDashboard } from '../../../Hooks';
+import LoadingAnimation from '../../Animations/LoadingAnimation';
+import FilterSelect, { FilterSelectHandles } from '../../Forms/FilterSelect';
+import Umap from '../../Visualisation/Umap';
 import styles from './Dashboard.module.css';
-import SunBurstPlot from '../Visualisation/SunBurstPlot';
+import SunBurstPlot from '../../Visualisation/SunBurstPlot';
 
 const Dashboard: React.FC = () => {
     const {
