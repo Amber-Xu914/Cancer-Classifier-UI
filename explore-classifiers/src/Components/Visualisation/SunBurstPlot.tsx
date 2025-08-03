@@ -1,11 +1,12 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { SunburstClickEvent, SunburstData } from 'plotly.js';
-import React from 'react';
+import React, { useRef } from 'react';
 import Plot from 'react-plotly.js';
 import { CancerTypeData } from '../../Service/getCancerHireachyData';
 import { corePalette } from '../../Themes/colours';
 import zccTheme from '../../Themes/zccTheme';
 import { useSunburstData } from '../../Hooks';
+import { DEFAULT_CANCER_TYPE } from '../../Constants/DashboardDefaults';
 
 type SunburstChartProps = {
     data: CancerTypeData[],
@@ -19,6 +20,7 @@ const SunburstPlot = (
     { data, level, onClick }: SunburstChartProps
 ) => {
     const plotData: Partial<SunburstData>[] = useSunburstData(data, level);
+    const nextLevelRef = useRef<string | null>(null);
 
     const layout: Partial<Plotly.Layout> = {
         margin: { l: 0, r: 0, b: 0, t: 20 },
@@ -38,12 +40,21 @@ const SunburstPlot = (
 
     const handleClick = (data: SunburstClickEvent) => {
         const { nextLevel } = data;
-        onClick(nextLevel);
+        nextLevelRef.current = nextLevel;
+    }
+
+    const handleAnimated = () => {
+        if (nextLevelRef.current) {
+            onClick(nextLevelRef.current);
+            nextLevelRef.current = null;
+        }
     }
 
     const handleInitialized = (_: any, graphDiv: Plotly.PlotlyHTMLElement) => {
         graphDiv.removeAllListeners?.('plotly_sunburstclick');
+        graphDiv.removeAllListeners?.('plotly_animated');
         graphDiv.on?.('plotly_sunburstclick', handleClick);
+        graphDiv.on?.('plotly_animated', handleAnimated);
     };
 
     return (

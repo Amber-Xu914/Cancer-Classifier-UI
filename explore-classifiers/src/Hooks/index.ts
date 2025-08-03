@@ -1,4 +1,4 @@
-export { useDashboard } from './useDashboard';
+export { useDashboardActions } from './useDashboardActions';
 export { usePatientResults } from './usePatientResults';
 export { useThumbnail } from './useThumbnail';
 export { useSampleIds } from './useSampleIds';

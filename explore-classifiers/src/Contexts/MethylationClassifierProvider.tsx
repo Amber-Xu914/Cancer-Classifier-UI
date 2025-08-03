@@ -1,8 +1,14 @@
 import { useState } from "react";
-import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from "../Constants/Common/DashboardDefaults";
-import { DashboardContext } from "../Contexts/DashboardContexts";
+import { DashboardContext } from "./DashboardContexts";
+import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from "../Constants/DashboardDefaults";
 
-export default function MethylationClassifierProvider({ children }: { children: React.ReactNode }) {
+interface MethylationClassifierProviderProps {
+    children: React.ReactNode;
+}
+
+export default function MethylationClassifierProvider({
+    children
+}: MethylationClassifierProviderProps) {
     const [searchQuery, setSearchQuery] = useState(DEFAULT_SUMMARY);
     const [cancerType, setCancerType] = useState(DEFAULT_CANCER_TYPE);
 

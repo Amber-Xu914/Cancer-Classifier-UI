@@ -1,30 +1,20 @@
 import { useEffect, useRef } from 'react';
-import { useCancerHierarchy, useDashboard } from '../../../Hooks';
 import LoadingAnimation from '../../Animations/LoadingAnimation';
 import FilterSelect, { FilterSelectHandles } from '../../Forms/FilterSelect';
 import Umap from '../../Visualisation/Umap';
 import styles from './Dashboard.module.css';
 import SunBurstPlot from '../../Visualisation/SunBurstPlot';
+import { useCancerHierarchy, useDashboardActions } from '../../../Hooks';
+import { useLocation } from 'react-router-dom';
+import { useDashboard } from '../../../Contexts';
 
 const Dashboard: React.FC = () => {
-    const {
-        searchQuery,
-        cancerType,
-        location,
-        resetDashboard,
-        handleSearch,
-        handleSunburstClick,
-    } = useDashboard();
+    const location = useLocation();
+    const { handleSearch, handleSunburstClick } = useDashboardActions();
+    const { searchQuery, cancerType, resetDashboard } = useDashboard();
 
     const { data: cancerHierarchyData, loading } = useCancerHierarchy();
     const filterSelectRef = useRef<FilterSelectHandles>(null);
-
-    // Reset dashboard when navigating to dashboard route
-    useEffect(() => {
-        if (location.pathname === '/dashboard' || location.pathname === '/') {
-            resetDashboard();
-        }
-    }, [location.pathname, resetDashboard]);
 
     const handleSunburstClickWithClear = (value: string | null) => {
         // Clear search bar when clicking sunburst chart

@@ -40,7 +40,6 @@ const Umap = ({ cancerType }: UmapProps) => {
         return (
             <div
                 style={{
-                    height: '500px',
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -67,7 +66,7 @@ const Umap = ({ cancerType }: UmapProps) => {
                 autosize: true,
             }}
             useResizeHandler
-            style={{ width: '100%', height: '500px' }}
+            style={{ width: '100%', height: '100%' }}
         />;
 };
 

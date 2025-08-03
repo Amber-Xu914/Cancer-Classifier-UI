@@ -5,6 +5,7 @@ import { TextField } from "@mui/material";
 import '../../Global.css';
 import { UmapCard } from "../UmapCard";
 import UmapThumbnail from "../UmapThumbnail";
+import FloatingBox from "../FloatingBox";
 
 
 // pending floating box for summary
@@ -15,12 +16,12 @@ export default function PatientResults() {
     const [results, setResults] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [value, setValue] = useState('');
+    const [showFloatingBox, setShowFloatingBox] = useState(true);
+    const [summaryList, setSummaryList] = useState<string[]>([]);
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
         const sampleId = searchParams.get("value");
-
-        console.log("Extracted sampleId from URL:", sampleId);
 
         if (sampleId) {
             setValue(sampleId);
@@ -47,6 +48,8 @@ export default function PatientResults() {
     }, [location]);
 
     const handleThumbnailClick = (id: number) => {
+        const result = results[id];
+
         setSelectedUMAPs((prev) => {
             const newSet = new Set(prev);
             const isNewlyAdded = !newSet.has(id);
@@ -57,7 +60,17 @@ export default function PatientResults() {
             }
 
             if (isNewlyAdded) {
-                // wait till the UMAP to come out a bit
+                const newSummary = `Model: ${result.model_name}\nPrediction: ${result.prediction}\nProbability: ${result.probability.toFixed(2)}`;
+
+                setSummaryList((prevSummaries) => {
+                    if (!prevSummaries.includes(newSummary)) {
+                        return [...prevSummaries, newSummary];
+                    }
+                    return prevSummaries;
+                });
+
+                setShowFloatingBox(true);
+
                 setTimeout(() => {
                     cardRefs.current[id]?.scrollIntoView({
                         behavior: "smooth",
@@ -162,6 +175,36 @@ export default function PatientResults() {
                     </div>
                 ))}
             </main>
+
+            {/* Right summary box */}
+            <FloatingBox
+                open={showFloatingBox}
+                onClose={() => setShowFloatingBox(false)}
+                summaries={summaryList}
+            />
+
+            {/* Toggle reopen button */}
+            {!showFloatingBox && (
+                <button
+                    onClick={() => setShowFloatingBox(true)}
+                    style={{
+                        position: "fixed",
+                        top: "50%",
+                        right: 0,
+                        transform: "translateY(-50%)",
+                        backgroundColor: "#00A859",
+                        color: "white",
+                        border: "none",
+                        padding: "8px 12px",
+                        borderTopLeftRadius: "6px",
+                        borderBottomLeftRadius: "6px",
+                        cursor: "pointer",
+                        zIndex: 1301,
+                    }}
+                >
+                    &#8592; Summary
+                </button>
+            )}
         </div>
     );
 }

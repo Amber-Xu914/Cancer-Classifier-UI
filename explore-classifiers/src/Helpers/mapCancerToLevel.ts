@@ -1,5 +1,5 @@
+import { DEFAULT_CANCER_TYPE } from "../Constants/DashboardDefaults";
 import { CancerTypeData } from "../Service/getCancerHireachyData";
-import { DEFAULT_CANCER_TYPE } from "../Constants/Common/DashboardDefaults";
 
 export type CancerTypeOptions = {
     level: string,

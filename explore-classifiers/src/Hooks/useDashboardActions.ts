@@ -1,6 +1,7 @@
-import { useState, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { DEFAULT_SUMMARY, DEFAULT_CANCER_TYPE } from "../Constants/DashboardDefaults";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from "../Constants/DashboardDefaults";
+import { useDashboard } from "../Contexts";
 
 export interface DashboardState {
     searchQuery: string;
@@ -15,16 +16,9 @@ export interface DashboardActions {
     handleSunburstClick: (value: string | null) => void;
 }
 
-export const useDashboard = () => {
+export const useDashboardActions = () => {
     const navigate = useNavigate();
-    const location = useLocation();
-    const [searchQuery, setSearchQuery] = useState(DEFAULT_SUMMARY);
-    const [cancerType, setCancerType] = useState(DEFAULT_CANCER_TYPE);
-
-    const resetDashboard = useCallback(() => {
-        setSearchQuery(DEFAULT_SUMMARY);
-        setCancerType(DEFAULT_CANCER_TYPE);
-    }, []);
+    const { setSearchQuery, setCancerType } = useDashboard();
 
     const handleSearch = useCallback((filter: string, value: string | null) => {
         if (!value) return;
@@ -38,7 +32,7 @@ export const useDashboard = () => {
             setSearchQuery(DEFAULT_SUMMARY);
             setCancerType(DEFAULT_CANCER_TYPE);
         }
-    }, [navigate]);
+    }, [navigate, setSearchQuery, setCancerType]);
 
     const handleSunburstClick = useCallback((value: string | null) => {
         if (value) {
@@ -48,17 +42,9 @@ export const useDashboard = () => {
         if (value === DEFAULT_CANCER_TYPE) {
             setSearchQuery(DEFAULT_SUMMARY);
         }
-    }, []);
+    }, [setSearchQuery, setCancerType]);
 
     return {
-        // State
-        searchQuery,
-        cancerType,
-        location,
-        // Actions
-        setSearchQuery,
-        setCancerType,
-        resetDashboard,
         handleSearch,
         handleSunburstClick,
     };
