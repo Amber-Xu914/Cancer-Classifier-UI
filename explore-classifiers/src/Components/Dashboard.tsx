@@ -30,7 +30,7 @@ export default function Dashboard() {
         if (location.pathname === '/dashboard' || location.pathname === '/') {
             resetDashboard();
         }
-    }, [location.pathname]);
+    }, [location.pathname, resetDashboard]);
 
     // Handle search based on filter type
     // This function is called when the user clicks the search button in FilterSelect
