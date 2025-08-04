@@ -1,17 +1,17 @@
-import { useEffect, useRef } from 'react';
-import LoadingAnimation from '../../Animations/LoadingAnimation';
-import FilterSelect, { FilterSelectHandles } from '../../Forms/FilterSelect';
-import Umap from '../../Visualisation/Umap';
-import styles from './Dashboard.module.css';
-import SunBurstPlot from '../../Visualisation/SunBurstPlot';
-import { useCancerHierarchy, useDashboardActions } from '../../../Hooks';
+import { useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useDashboard } from '../../../Contexts';
+import { useCancerHierarchy, useDashboardActions } from '../../../Hooks';
+import LoadingAnimation from '../../Animations/LoadingAnimation';
+import FilterSelect, { FilterSelectHandles } from '../../Forms/FilterSelect';
+import SunBurstPlot from '../../Visualisation/SunBurstPlot';
+import Umap from '../../Visualisation/Umap';
+import styles from './Dashboard.module.css';
 
 const Dashboard: React.FC = () => {
     const location = useLocation();
     const { handleSearch, handleSunburstClick } = useDashboardActions();
-    const { searchQuery, cancerType, resetDashboard } = useDashboard();
+    const { searchQuery, cancerType } = useDashboard();
 
     const { data: cancerHierarchyData, loading } = useCancerHierarchy();
     const filterSelectRef = useRef<FilterSelectHandles>(null);
