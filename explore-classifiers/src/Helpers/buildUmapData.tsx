@@ -1,4 +1,4 @@
-import { Scatter3dData } from "plotly.js";
+import { Scatter3dData, Datum  } from "plotly.js";
 
 const Plotly = require('plotly.js-dist') as typeof import('plotly.js');
 
@@ -7,7 +7,8 @@ export const buildUmapData = (
 ) => {
     const umapData: Partial<Scatter3dData>[] = data.map((trace) => ({
         ...trace,
-        hovertemplate: 'ID: %{text}<br>',
+        customdata: trace.text as Datum[],
+        hovertemplate: 'ID: %{customdata}<extra></extra>',
     }));
 
     return umapData;
