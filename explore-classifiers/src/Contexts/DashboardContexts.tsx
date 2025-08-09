@@ -16,4 +16,4 @@ export const useDashboard = () => {
         throw new Error('useDashboard must be used within a DashboardContext.Provider');
     }
     return context;
-};
+}
