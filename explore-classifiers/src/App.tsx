@@ -3,9 +3,9 @@ import { AnimatePresence } from 'framer-motion';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import Dashboard from './Components/Pages/Dashboard/Dashboard';
 import zccTheme from './Themes/zccTheme';
-import NavBar from './Components/NavBar';
 import { MethylationClassifierProvider } from './Contexts';
 import PatientResults from './Components/Pages/Patients/PatientResults';
+import NavBar from './Components/Common/NavBar';
 
 function AnimatedRoutes() {
     const location = useLocation();

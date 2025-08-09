@@ -1,9 +1,9 @@
 import { AppBar, Box, styled } from '@mui/material';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { NAVBAR_HEIGHT } from '../Constants/Common/Dimensions.constants';
-import { corePalette } from '../Themes/colours';
-import CustomButton from './Common/Button';
-import { useDashboard } from '../Contexts';
+import { NAVBAR_HEIGHT } from '../../Constants/Common/Dimensions.constants';
+import { corePalette } from '../../Themes/colours';
+import CustomButton from './Button';
+import { useDashboard } from '../../Contexts';
 
 const NavBarWrapper = styled(AppBar)(() => ({
     position: 'sticky',
