@@ -5,7 +5,7 @@ import { useCancerHierarchy, useDashboardActions } from '../../../Hooks';
 import LoadingAnimation from '../../Animations/LoadingAnimation';
 import FilterSelect, { FilterSelectHandles } from '../../Forms/FilterSelect';
 import SunBurstPlot from '../../Visualisation/SunBurstPlot';
-import Umap from '../../Visualisation/Umap';
+import CancerUmap from '../../Visualisation/CancerUmap';
 import styles from './Dashboard.module.css';
 
 const Dashboard: React.FC = () => {
@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 <div className={styles.umapSection}>
-                    <Umap cancerType={cancerType} />
+                    <CancerUmap cancerType={cancerType} />
                 </div>
             </main>
         </div>

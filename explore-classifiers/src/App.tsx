@@ -4,8 +4,8 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import Dashboard from './Components/Pages/Dashboard/Dashboard';
 import zccTheme from './Themes/zccTheme';
 import NavBar from './Components/NavBar';
-import PatientResults from './Components/Pages/PatientResults';
 import { MethylationClassifierProvider } from './Contexts';
+import PatientResults from './Components/Pages/Patients/PatientResults';
 
 function AnimatedRoutes() {
     const location = useLocation();

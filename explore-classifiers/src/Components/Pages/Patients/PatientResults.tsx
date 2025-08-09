@@ -1,11 +1,11 @@
 import { useRef, useState, useEffect } from "react";
-import styles from "../PatientResults.module.css";
+import styles from "./PatientResults.module.css";
 import { useLocation } from "react-router-dom";
 import { TextField } from "@mui/material";
-import '../../Global.css';
-import { UmapCard } from "../UmapCard";
-import UmapThumbnail from "../UmapThumbnail";
-import FloatingBox from "../FloatingBox";
+import '../../../Global.css';
+import FloatingBox from "../../FloatingBox";
+import { UmapCard } from "../../UmapCard";
+import UmapThumbnail from "../../UmapThumbnail";
 
 
 // pending floating box for summary

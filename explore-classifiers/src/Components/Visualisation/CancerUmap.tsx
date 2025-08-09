@@ -11,7 +11,7 @@ interface UmapProps {
     cancerType: string;
 }
 
-const Umap = ({ cancerType }: UmapProps) => {
+const CancerUmap = ({ cancerType }: UmapProps) => {
     const [umap, setUmap] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
@@ -127,4 +127,4 @@ const Umap = ({ cancerType }: UmapProps) => {
         />;
 };
 
-export default Umap;
+export default CancerUmap;
