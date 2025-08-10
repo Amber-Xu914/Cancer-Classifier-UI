@@ -1,3 +1,0 @@
-.plotContainer :global(.js-plotly-plot .plot .scatterlayer .trace .points path) {
-  cursor: pointer;
-}

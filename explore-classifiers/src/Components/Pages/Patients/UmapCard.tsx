@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import PatientUmap from "./Visualisation/PatientUmap";
-import styles from "./Pages/Patients/PatientResults.module.css";
+import PatientUmap from "../../Visualisation/PatientUmap";
+import styles from "./PatientResults.module.css";
 
 interface UmapCardProps {
     layer: number;

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { DashboardContext } from "./DashboardContexts";
 import { DEFAULT_CANCER_TYPE, DEFAULT_SUMMARY } from "../Constants/DashboardDefaults";
+import { DashboardContext } from "./DashboardContexts";
 
 interface MethylationClassifierProviderProps {
     children: React.ReactNode;

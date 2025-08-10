@@ -2,11 +2,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { SunburstClickEvent, SunburstData } from 'plotly.js';
 import React, { useRef } from 'react';
 import Plot from 'react-plotly.js';
+import { useSunburstData } from '../../Hooks';
 import { CancerTypeData } from '../../Service/getCancerHireachyData';
 import { corePalette } from '../../Themes/colours';
 import zccTheme from '../../Themes/zccTheme';
-import { useSunburstData } from '../../Hooks';
-import { DEFAULT_CANCER_TYPE } from '../../Constants/DashboardDefaults';
 
 type SunburstChartProps = {
     data: CancerTypeData[],

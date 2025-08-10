@@ -1,4 +1,4 @@
-import { Scatter3dData, Datum  } from "plotly.js";
+import { Datum, Scatter3dData } from "plotly.js";
 
 const Plotly = require('plotly.js-dist') as typeof import('plotly.js');
 

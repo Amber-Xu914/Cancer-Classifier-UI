@@ -1,11 +1,11 @@
 import { ThemeProvider } from '@mui/material/styles';
 import { AnimatePresence } from 'framer-motion';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import Dashboard from './Components/Pages/Dashboard/Dashboard';
-import zccTheme from './Themes/zccTheme';
-import { MethylationClassifierProvider } from './Contexts';
-import PatientResults from './Components/Pages/Patients/PatientResults';
 import NavBar from './Components/Common/NavBar';
+import Dashboard from './Components/Pages/Dashboard/Dashboard';
+import PatientResults from './Components/Pages/Patients/PatientResults';
+import { MethylationClassifierProvider } from './Contexts';
+import zccTheme from './Themes/zccTheme';
 
 function AnimatedRoutes() {
     const location = useLocation();
