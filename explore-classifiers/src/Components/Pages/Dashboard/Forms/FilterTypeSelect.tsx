@@ -1,4 +1,4 @@
-import { Select, SelectChangeEvent, MenuItem } from '@mui/material';
+import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
 
 interface FilterTypeSelectProps {
     value: string;

@@ -3,10 +3,10 @@ import { useLocation } from 'react-router-dom';
 import { useDashboard } from '../../../Contexts';
 import { useCancerHierarchy, useDashboardActions } from '../../../Hooks';
 import LoadingAnimation from '../../Animations/LoadingAnimation';
-import FilterSelect, { FilterSelectHandles } from '../../Forms/FilterSelect';
-import SunBurstPlot from '../../Visualisation/SunBurstPlot';
 import CancerUmap from '../../Visualisation/CancerUmap';
+import SunBurstPlot from '../../Visualisation/SunBurstPlot';
 import styles from './Dashboard.module.css';
+import FilterSelect, { FilterSelectHandles } from './Forms/FilterSelect';
 
 const Dashboard: React.FC = () => {
     const location = useLocation();

@@ -8,11 +8,11 @@ import {
 } from 'react';
 import {
     mapCancerToLevel
-} from '../../Helpers/mapCancerToLevel';
-import { CancerTypeData } from '../../Service/getCancerHireachyData';
+} from '../../../../Helpers/mapCancerToLevel';
+import { useSampleIds, useSearchLogic } from '../../../../Hooks';
+import { CancerTypeData } from '../../../../Service/getCancerHireachyData';
 import { FilterTypeSelect } from './FilterTypeSelect';
 import { SearchAutocomplete } from './SearchAutocomplete';
-import { useSampleIds, useSearchLogic } from '../../Hooks';
 
 export interface FilterSelectHandles {
     clearInputs: () => void;

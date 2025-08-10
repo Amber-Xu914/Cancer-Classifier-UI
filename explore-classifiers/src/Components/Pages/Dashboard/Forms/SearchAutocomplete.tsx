@@ -1,7 +1,7 @@
-import { Autocomplete, TextField, Box } from '@mui/material';
+import { Autocomplete, Box, TextField } from '@mui/material';
 import { Search } from 'lucide-react';
-import { CancerTypeOptions } from '../../Helpers/mapCancerToLevel';
-import { corePalette } from '../../Themes/colours';
+import { CancerTypeOptions } from '../../../../Helpers/mapCancerToLevel';
+import { corePalette } from '../../../../Themes/colours';
 
 interface SearchAutocompleteProps {
     filter: string;

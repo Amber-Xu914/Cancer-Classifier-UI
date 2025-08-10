@@ -1,11 +1,11 @@
 
-import { useState, useEffect } from 'react';
-import Plot from 'react-plotly.js';
 import { Scatter3dData } from 'plotly.js';
+import { useEffect, useState } from 'react';
+import Plot from 'react-plotly.js';
+import { useNavigate } from 'react-router-dom';
 import { buildUmapData } from '../../Helpers/buildUmapData';
 import { getCancerUMAP } from '../../Service/getCancerUMAPData';
 import LoadingAnimation from '../Animations/LoadingAnimation';
-import { useNavigate } from 'react-router-dom';
 
 interface UmapProps {
     cancerType: string;

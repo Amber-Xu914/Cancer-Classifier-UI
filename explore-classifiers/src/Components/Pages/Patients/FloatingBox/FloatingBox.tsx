@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
 import {
+    Box,
     IconButton,
     Typography,
-    Box,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import React, { useEffect, useState } from 'react';
 import { ResizableBox } from 'react-resizable';
 import 'react-resizable/css/styles.css';
+import '../../../../Global.css';
 import styles from './FloatingBox.module.css';
-import '../Global.css';
 
 interface FloatingBoxProps {
     open: boolean;
